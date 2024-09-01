@@ -60,7 +60,7 @@ Dont forget to change this values if you start mailcatcher with other configurat
 - Have a domain. You can buy a domain on GoDaddy or other domain registry services.
 - Choose an email provider like Mailgun, Postmark, Sendgrid yor any other you like.
 
-Once you have a domain that you own and a email provider, you need to link these two. To achieve this just follow the steps provided by your email provider.
+Once you have a domain and a email provider, you need to link these two. To achieve this just follow the steps provided by your email provider.
 
 The steps usually is to include records into your domain's DNS settings.
 
