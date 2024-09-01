@@ -40,7 +40,7 @@ Install [Mailcatcher](https://mailcatcher.me/) to run a local SMTP server and ca
 2) run mailtcatcher on terminal by typing `mailtcatcher`
 3) go to [http://127.0.0.1:1080/](http://127.0.0.1:1080/) so you can see emails sent through your local smtp server.
 
-By default mailcatcher starts the SMTP server at `smtp://127.0.0.1:1025`. That port and address are already configurated in `config/environments/development.rb`. Take a look:
+By default mailcatcher starts the SMTP server at `smtp://127.0.0.1:1025`. That port and address are already configured in `config/environments/development.rb`. Take a look:
 ```ruby
 
  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
