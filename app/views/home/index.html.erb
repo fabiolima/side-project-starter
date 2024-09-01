@@ -1,0 +1,20 @@
+<article class="max-w-4xl mx-auto py-8">
+  <h1 class="text-4xl font-bold text-center">Side Project Starter</h1>
+  <hr class="my-8" />
+
+  <div class="text-center space-x-8">
+    <% if current_user %>
+      <%= button_to "User logout", destroy_user_session_path, method: :delete, class: "text-blue-500 underline", form_class: "inline"  %>
+      <%= link_to "User dashboard", app_dashboard_path, class: "text-blue-500 underline"  %>
+    <% else %>
+      <%= link_to "User login", new_user_session_path, class: "text-blue-500 underline"  %>
+    <% end %>
+
+    <% if current_admin %>
+      <%= button_to "Admin logout", destroy_admin_session_path, method: :delete, class: "text-blue-500 underline", form_class: "inline"  %>
+      <%= link_to "Admin dashboard", admin_dashboard_path, class: "text-blue-500 underline"  %>
+    <% else %>
+      <%= link_to "Admin login", new_admin_session_path, class: "text-blue-500 underline"  %>
+    <% end %>
+  </div>
+</article>

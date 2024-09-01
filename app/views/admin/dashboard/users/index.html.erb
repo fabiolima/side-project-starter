@@ -1,0 +1,36 @@
+<%= content_for :nav_title do %> Users <%end%>
+
+<% content_for :pre_content do %>
+  <%= link_to admin_dashboard_path, class: "w-auto inline-block mb-4 text-gray-800 p-1 px-2 text-sm" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 inline-block me-1">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+    </svg>
+  Back to dashboard
+  <% end %>
+<% end %>
+
+<%# <h3 class="text-3xl font-bold mb-10"> Users </h3>
+<hr class="mb-10" /> %>
+<div>
+  <%= form_tag(admin_dashboard_users_path, method: :get, class: "flex mb-8") do %>
+    <%= text_field_tag(:search, params[:search], class: "w-full bg-gray-100 shadow-sm  px-3 py-3 border border-gray-black focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "Search by email" ) %>
+    <%= submit_tag("Search", :id => "button", :class => "ms-2 block px-4 bg-black text-white h-100") %>
+  <% end %>
+  <ul>
+    <% @users.each do |user| %>
+      <li class="py-3 flex items-center border-b" >
+        <div class="flex flex-1 items-center">
+          <p><%= user.email %></p>
+          <% if user.access_locked? %>
+            <em class="ms-2 text-sm text-yellow-700 text-italic">(banned)</em>
+          <% end %>
+        </div>
+        <%= link_to "show", admin_dashboard_user_path(user.id), class: "bg-white border-black border text-black hover:bg-black hover:text-white font-semibold text-sm py-1 px-3 inline-flex items-center" %>
+      </li>
+    <% end %>
+  </ul>
+  <section class="mt-8 flex justify-between items-center">
+    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+    <%== pagy_info(@pagy) %>
+  </section>
+</div>

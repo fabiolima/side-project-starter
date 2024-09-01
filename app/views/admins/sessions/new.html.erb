@@ -1,0 +1,38 @@
+<div class="min-h-screen flex flex-col items-center justify-center w-full bg-gray-50">
+  <h2 class="text-2xl font-bold text-center mb-8">Log in as Admin</h2>
+  <div class="bg-white shadow-md rounded-lg p-8 max-w-md min-w-96 mb-8">
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <% if notice %>
+        <p class="alert p-4 bg-indigo-100 rounded-md mb-4"><%= notice %></p>
+      <% end %>
+      <% if alert %>
+        <p class="alert p-4 bg-indigo-100 rounded-md mb-4"><%= alert %></p>
+      <% end %>
+      <div class="field mb-4">
+        <%= f.label :email, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" %>
+      </div>
+      <div class="field mb-4">
+        <%= f.label :password, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.password_field :password, autocomplete: "current-password", class: "shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" %>
+      </div>
+      <div class="field flex mb-4">
+        <% if devise_mapping.rememberable? %>
+          <div class="flex-1">
+            <%= f.check_box :remember_me, class: "shrink-0 mt-0 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" %>
+            <%= f.label :remember_me, class: "text-sm ms-1 text-gray-700" %>
+          </div>
+        <% end %>
+        <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+          <div class="flex-1">
+            <%= link_to "Forgot your password?", new_password_path(resource_name), class: "text-sm text-right text-indigo-500 font-semibold" %>
+          </div>
+        <% end %>
+      </div>
+      <div class="actions">
+        <%= f.submit "Log in", class: "cursor-pointer w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+      </div>
+    <% end %>
+  </div>
+  <%= render "admins/shared/links" %>
+</div>
