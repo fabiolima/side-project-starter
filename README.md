@@ -32,7 +32,7 @@ Rails 7.2.1
 
 
 ## Emails
-Devise send transaction emails (e.g reset your password) so you need to configure an email provider for production and a local SMTP server for development. Let's start with development enviroment.
+Devise send transaction emails (e.g reset your password) so you need to configure an email provider for production and a local SMTP server for development. Let's start with development environment.
 #### Development environment
 Install [Mailcatcher](https://mailcatcher.me/) to run a local SMTP server and catch all emails send to localhost.
 
