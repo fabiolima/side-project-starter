@@ -76,7 +76,7 @@ SMTP_USERNAME
 SMTP_PASSWORD
 ```
 
-Theses variables are used in `config/environment/production.rb`. Take a look:
+These variables are used in `config/environments/production.rb`. Take a look:
 ```ruby
  config.action_mailer.smtp_settings = {
     authentication: :plain,
@@ -88,3 +88,5 @@ Theses variables are used in `config/environment/production.rb`. Take a look:
   }
 ```
 If you are using [Render](https://render.com) to host your app, go to your web service dashboard, click on Environment link (left menu) and add the variables above. Don't forget to restart your server after this.
+
+And if you are using another host, just find where to set environment variables.
