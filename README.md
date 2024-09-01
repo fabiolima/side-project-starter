@@ -54,24 +54,25 @@ By default mailcatcher starts the SMTP server at `smtp://127.0.0.1:1025`. That p
 
 Dont forget to change this values if you start mailcatcher with other configurations.
 
+#### Production environment
 
-##### Pre requisites:
+#### Pre requisites:
 - Have a domain. You can buy a domain on GoDaddy or other domain registry services.
 - Choose an email provider like Mailgun, Postmark, Sendgrid yor any other you like.
 
 Once you have a domain that you own and a email provider, you need to link these two. To achieve this just follow the steps provided by your email provider.
 
-The steps usually is to include records into your DNS settings on your domain.
+The steps usually is to include records into your domain's DNS settings.
 
-Once your domain is verified whitin your email provider, you need to find these informations and add as enviroment variables to your webservice.
+Once your domain is verified whitin your email provider, you need to find these informations: **SMTP address**, **SMTP port**, **SMTP domain**, **username**, **password**  and add as enviroment variables to your webservice.
+
+The environment variables should have the respective names:
 
 ```
+SMTP_ADDRESS
+SMTP_PORT
+SMTP_DOMAIN
+SMTP_USERNAME
+SMTP_PASSWORD
 ```
-
-- SMTP address
-- SMTP port
-- SMTP domain
-- Username
-- Password
-
-And add as environment variables to Render
+If you are using [Render](https://render.com) to host your app, go to your web service dashboard, click on Environment link (left menu) and add the variables above. Don't forget to restart your server after this.
