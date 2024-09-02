@@ -6,6 +6,8 @@ class User < ApplicationRecord
          :lockable
 
   has_one :profile, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
+
   after_create :init_profile
 
   def init_profile
