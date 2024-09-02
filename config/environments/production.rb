@@ -79,12 +79,11 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.default_url_options = { host: ENV["SMTP_HOST"] }
+  config.action_mailer.default_url_options = { host: ENV["SMTP_DEFAULT_URL_HOST"] }
   config.action_mailer.smtp_settings = {
     authentication: :plain,
     address: ENV["SMTP_ADDRESS"],
     port: ENV["SMTP_PORT"],
-    # domain: ENV["SMTP_DOMAIN"],
     user_name: ENV["SMTP_USER_NAME"],
     password: ENV["SMTP_PASSWORD"]
   }
