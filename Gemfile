@@ -65,3 +65,5 @@ gem 'pagy', "~> 9.0"
 gem "ahoy_matey"
 
 gem "chartkick"
+
+gem 'stripe'
