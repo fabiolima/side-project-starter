@@ -58,31 +58,32 @@ Dont forget to change this values if you start mailcatcher with other configurat
 
 #### Pre requisites:
 - Have a domain. You can buy a domain on GoDaddy or other domain registry services.
-- Choose an email provider like Mailgun, Postmark, Sendgrid yor any other you like.
+- Choose an email provider like Mailgun, Postmark, Sendgrid yor any other you like. I suggest that you use [Resend](https://resend.com) because they have a fat free tier and is developer friendly.
 
 Once you have a domain and a email provider, you need to link these two. To achieve this just follow the steps provided by your email provider.
 
 The steps usually is to include records into your domain's DNS settings.
 
-Once your domain is verified whitin your email provider, you need to find these informations: **SMTP address**, **SMTP port**, **SMTP domain**, **username**, **password**  and add as enviroment variables to your webservice.
+Once your domain is verified whitin your email provider, you need to find these informations: **SMTP address**, **SMTP port**, **username**, **password**, then add as enviroment variables to your webservice.
 
 The environment variables should have the respective names:
 
 ```
 SMTP_ADDRESS
 SMTP_PORT
-SMTP_DOMAIN
-SMTP_USERNAME
+SMTP_USER_NAME
 SMTP_PASSWORD
 ```
 
-These variables are used in `config/environments/production.rb`. Take a look:
+You also need to set a variable named `SMTP_DEFAULT_URL_HOST` with your domain. In my case, the domain is `sideprojectstarter.dev.br`. You should set to a domain that you own.
+
+These environment variables are used in `config/environments/production.rb`. Take a look:
 ```ruby
+ config.action_mailer.default_url_options = { host: ENV["SMTP_DEFAULT_URL_HOST"] }
  config.action_mailer.smtp_settings = {
     authentication: :plain,
     address: ENV["SMTP_ADDRESS"],
     port: ENV["SMTP_PORT"],
-    domain: ENV["SMTP_DOMAIN"],
     user_name: ENV["SMTP_USER_NAME"],
     password: ENV["SMTP_PASSWORD"]
   }
