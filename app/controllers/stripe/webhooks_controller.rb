@@ -38,7 +38,8 @@ class Stripe::WebhooksController < ApplicationController
     when "customer.created"
       customer = event.data.object
       user = User.find_by(email: customer.email)
-      user.update(stripe_id: customer.id)
+      user.update(stripe_id: customer.id) unless user.nil?
+      debugger
     end
 
     # Get the type of webhook event sent - used to check the status of PaymentIntents.
