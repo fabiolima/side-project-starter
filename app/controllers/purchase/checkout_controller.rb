@@ -28,6 +28,6 @@ class Purchase::CheckoutController < ApplicationController
   private
 
   def create_params
-    params.permit(:price_id)
+    params.permit(:price_id, :authenticity_token)
   end
 end

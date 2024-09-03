@@ -1,5 +1,6 @@
 class Stripe::WebhooksController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [ :create ]
+
   def create
     # Replace this endpoint secret with your endpoint's unique secret
     # If you are testing with the CLI, find the secret by running 'stripe listen'
@@ -39,45 +40,26 @@ class Stripe::WebhooksController < ApplicationController
       customer = event.data.object
       user = User.find_by(email: customer.email)
       user.update(stripe_id: customer.id) unless user.nil?
-      debugger
+
+    when "checkout.session.completed"
+      customer = event.data.object
+      return unless User.exists?(customer.client_reference_id)
+
+      user = User.find(customer.client_reference_id)
+      stripe_subscription = Stripe::Subscription.retrieve(customer.subscription)
+
+      Subscription.create(
+        subscription_id: stripe_subscription.id,
+        customer_id: stripe_subscription.customer,
+        plan_id: stripe_subscription.plan.id,
+        status: stripe_subscription.status,
+        current_period_start: Time.at(stripe_subscription.current_period_start).to_datetime,
+        current_period_end: Time.at(stripe_subscription.current_period_end).to_datetime,
+        interval: stripe_subscription.plan.interval,
+        user: user,
+      )
     end
 
-    # Get the type of webhook event sent - used to check the status of PaymentIntents.
-    # event_type = event["type"]
-    # data = event["data"]
-    # data_object = data["object"]
-
-    # if event.type == "customer.subscription.deleted"
-    #   # handle subscription canceled automatically based
-    #   # upon your subscription settings. Or if the user cancels it.
-    #   # puts data_object
-    #   puts "Subscription canceled: #{event.id}"
-    # end
-
-    # if event.type == "customer.subscription.updated"
-    #   # handle subscription updated
-    #   # puts data_object
-    #   puts "Subscription updated: #{event.id}"
-    # end
-
-    # if event.type == "customer.subscription.created"
-    #   # handle subscription created
-    #   # puts data_object
-    #   puts "Subscription created: #{event.id}"
-    # end
-
-    # if event.type == "customer.subscription.trial_will_end"
-    #   # handle subscription trial ending
-    #   # puts data_object
-    #   puts "Subscription trial will end: #{event.id}"
-    # end
-
-    # if event.type == "entitlements.active_entitlement_summary.updated"
-    #   # handle active entitlement summary updated
-    #   # puts data_object
-    #   puts "Active entitlement summary updated: #{event.id}"
-    # end
-    #
     render json: { message: "success" }
   end
 end
