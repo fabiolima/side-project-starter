@@ -66,4 +66,4 @@ gem "ahoy_matey"
 
 gem "chartkick"
 
-gem 'stripe'
+gem "stripe"

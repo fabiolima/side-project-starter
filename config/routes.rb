@@ -32,23 +32,22 @@ Rails.application.routes.draw do
     end
   end
 
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  namespace :purchase do
+    resources :checkouts
+  end
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/*
-  get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-  get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-
-  # Defines the root path route ("/")
-  # root "posts#index"
-  #
-  root to: "home#index"
-  get "about", to: "home#about"
+  resources :subscriptions
 
   scope controller: :static do
     get :pricing
   end
+
+  get "up" => "rails/health#show", as: :rails_health_check
+  get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
+
+  # On development enviroment run: stripe listen --forward-to localhost:3000/stripe/webhooks
+  post "stripe/webhooks", to: "stripe/webhooks#create"
+
+  root to: "home#index"
 end
