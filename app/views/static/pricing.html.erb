@@ -6,15 +6,23 @@
   </p>
   <div class="space-x-4">
     <% if user_signed_in? %>
-      <%= form_tag purchase_checkouts_path,  method: :post, data: { turbo: false }, class: "inline" do %>
-        <input type="hidden" name="price_id" value="<%= Rails.application.credentials.dig(:stripe, :pricing, :monthly) %>" />
-        <%= submit_tag "Subscribe for R$ 5,00/mês", data: { disable_with: "Hold please..." }, class: "px-3 py-4 cursor-pointer bg-indigo-600 text-center rounded font-bold text-white shadow-sm" %>
-      <% end %>
+      <%= button_to "Subscribe for R$ 5,00/mês",
+        purchase_checkout_path,
+        method: :post,
+        data: { turbo: false },
+        params: { price_id: monthly_price },
+        form_class: "inline",
+        class: "px-3 py-4 cursor-pointer bg-indigo-600 text-center rounded font-bold text-white shadow-sm"
+      %>
 
-      <%= form_tag purchase_checkouts_path,  method: :post, data: { turbo: false }, class: "inline" do %>
-        <input type="hidden" name="price_id" value="<%= Rails.application.credentials.dig(:stripe, :pricing, :annual) %>" />
-        <%= submit_tag "Subscribe for R$ 50,00/ano", data: { disable_with: "Hold please..." }, class: "px-3 py-4 cursor-pointer bg-indigo-600 text-center rounded font-bold text-white shadow-sm" %>
-      <% end %>
+      <%= button_to "Subscribe for R$ 50,00/mês",
+        purchase_checkout_path,
+        method: :post,
+        data: { turbo: false },
+        params: { price_id: annual_price },
+        form_class: "inline",
+        class: "px-3 py-4 cursor-pointer bg-indigo-600 text-center rounded font-bold text-white shadow-sm"
+      %>
     <% else %>
       <%= link_to "Subscribe for R$ 5,00/mês", new_user_session_path, class: "px-3 py-4 bg-indigo-600 text-center rounded font-bold text-white shadow-sm" %>
       <%= link_to "Subscribe for R$ 50,00/ano", new_user_session_path, class: "px-3 py-4 bg-indigo-600 text-center rounded font-bold text-white shadow-sm" %>

@@ -68,4 +68,12 @@ class ApplicationHelperTest < ActionView::TestCase
       ""
     )
   end
+
+  test "monthly_price" do
+    assert_equal(monthly_price, Rails.application.credentials.dig(:stripe, :pricing, :monthly))
+  end
+
+  test "annual_price" do
+    assert_equal(annual_price, Rails.application.credentials.dig(:stripe, :pricing, :annual))
+  end
 end

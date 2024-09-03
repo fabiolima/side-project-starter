@@ -17,4 +17,12 @@ module ApplicationHelper
   def path_from_url(url)
     url.nil? ? "" : URI.parse(url).path
   end
+
+  def monthly_price
+    Rails.application.credentials.dig(:stripe, :pricing, :monthly)
+  end
+
+  def annual_price
+    Rails.application.credentials.dig(:stripe, :pricing, :annual)
+  end
 end

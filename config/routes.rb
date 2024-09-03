@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  # Skip registration because admins should be manually created.
   devise_for :admins, controllers: {
     sessions: "admins/sessions",
     registrations: "admins/registrations",
@@ -12,7 +11,7 @@ Rails.application.routes.draw do
     passwords: "users/passwords"
   }
 
-  # Administration routes for user management and whatever you want to be admin only.
+  # Admin dashboard
   namespace :admin do
     namespace :dashboard do
       get "/" => "home#index" # Admin::Dashboard::HomeController
@@ -23,7 +22,7 @@ Rails.application.routes.draw do
     end
   end
 
-  # User private area
+  # User dashboard
   namespace :app do
     namespace :dashboard do
       get "/" => "home#index" # Admin::Dashboard::HomeController
@@ -33,7 +32,8 @@ Rails.application.routes.draw do
   end
 
   namespace :purchase do
-    resources :checkouts
+    post :checkout, to: "checkout#create"
+    get :success, to: "checkout#success"
   end
 
   resources :subscriptions
