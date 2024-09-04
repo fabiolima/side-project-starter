@@ -1,6 +1,4 @@
-
 <%= content_for :nav_title do %> Dashboard <%end%>
-
 <div class="grid grid-cols-2 gap-x-10">
   <div>
     <h4 class="text-2xl font-bold mb-4">Stats</h4>
@@ -14,7 +12,6 @@
         </div>
       </div>
     </div>
-
     <h4 class="text-2xl font-bold mb-4">Top pages <em class="text-sm font-semibold text-gray-600">(last 30 days)</em> </h4>
     <div class="p-4 bg-white border rounded-xl text-gray-800 space-y-2">
       <div class="flex justify-between">
@@ -25,7 +22,6 @@
           visitors
         </p>
       </div>
-
       <ul>
         <% @visits.each do |url, count| %>
           <li class="flex">
@@ -37,5 +33,4 @@
     </div>
   </div>
 </div>
-
 <%# bar_chart @visits, library: { scales: { x: { ticks: { stepSize: 1 }}}} %>

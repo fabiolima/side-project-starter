@@ -1,36 +1,29 @@
 <%= content_for :nav_title do %> User Profile <%end%>
-
 <% content_for :pre_content do %>
   <%= link_to admin_dashboard_users_path, class: "w-auto inline-block mb-4 text-gray-800 p-1 px-2 text-sm" do %>
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 inline-block me-1">
       <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
     </svg>
-  Back to all users
+    Back to all users
   <% end %>
 <% end %>
-
 <div class="mb-3">
   <p class="font-semibold ">id</p>
   <p><%= @user.id %></p>
 </div>
-
 <div class="mb-3">
   <p class="font-semibold ">Email</p>
   <p><%= @user.email %></p>
 </div>
-
 <div class="mb-3">
   <p class="font-semibold ">Created at</p>
   <p><%= @user.created_at %></p>
 </div>
-
 <div>
   <p class="font-semibold ">Updated at</p>
   <p><%= @user.updated_at %></p>
 </div>
-
 <hr class="mt-8"/>
-
 <div class="mt-8 flex">
   <% if @user.access_locked? %>
     <%= button_to "Unban",
