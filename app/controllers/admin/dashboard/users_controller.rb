@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Handles the user pages inside admin's dashboard.
 class Admin::Dashboard::UsersController < ApplicationController
   include Pagy::Backend
 
