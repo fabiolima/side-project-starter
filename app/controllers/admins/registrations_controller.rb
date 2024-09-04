@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
+# Handles admin registrations
 class Admins::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
   def new
-    return redirect_to new_admin_session_path if has_admin?
+    return redirect_to new_admin_session_path if Admin.count.positive?
+
     super
   end
 
@@ -64,10 +66,4 @@ class Admins::RegistrationsController < Devise::RegistrationsController
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
-
-  private
-
-  def has_admin?
-    Admin.count > 0
-  end
 end
