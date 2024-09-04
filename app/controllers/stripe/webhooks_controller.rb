@@ -5,12 +5,9 @@ class Stripe::WebhooksController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [ :create ]
 
   def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    # Replace this endpoint secret with your endpoint's unique secret
-    # If you are testing with the CLI, find the secret by running 'stripe listen'
-    # If you are using an endpoint defined with the API or dashboard, look in your webhook settings
-    # at https://dashboard.stripe.com/webhooks
     webhook_secret = Rails.application.credentials.dig(:stripe, :webhook_secret)
     payload = request.body.read
+
     if !webhook_secret.empty?
       # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
       sig_header = request.env["HTTP_STRIPE_SIGNATURE"]
