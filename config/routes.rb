@@ -25,7 +25,8 @@ Rails.application.routes.draw do
   # User dashboard
   namespace :app do
     namespace :dashboard do
-      get "/" => "home#index" # Admin::Dashboard::HomeController
+      get :/, to: "home#index"
+      post :billings, to: "home#billings"
 
       resources :profiles, except: [ :index, :destroy, :create ]
     end

@@ -79,9 +79,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_02_195257) do
   end
 
   create_table "subscriptions", force: :cascade do |t|
-    t.string "plan_id"
-    t.string "customer_id"
-    t.string "subscription_id"
+    t.string "stripe_plan_id"
+    t.string "stripe_customer_id"
+    t.string "stripe_subscription_id"
     t.bigint "user_id", null: false
     t.string "status"
     t.string "interval"

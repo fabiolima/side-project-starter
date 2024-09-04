@@ -7,7 +7,10 @@ class Profile < ApplicationRecord
   after_update :update_stripe_customer
 
   def update_stripe_customer
-    return unless saved_change_to_attribute?(:first_name) || saved_change_to_attribute?(:last_name)
+    return unless
+      saved_change_to_attribute?(:first_name) ||
+      saved_change_to_attribute?(:last_name) || self.user.stripe_id.nil?
+
     Stripe::Customer.update(self.user.stripe_id, { name:  full_name })
   end
 

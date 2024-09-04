@@ -18,11 +18,7 @@ module ApplicationHelper
     url.nil? ? "" : URI.parse(url).path
   end
 
-  def monthly_price
-    Rails.application.credentials.dig(:stripe, :pricing, :monthly)
-  end
-
-  def annual_price
-    Rails.application.credentials.dig(:stripe, :pricing, :annual)
+  def number_to_currency_br(number)
+    number_to_currency(number, unit: "R$ ", separator: ",", delimiter: ".")
   end
 end

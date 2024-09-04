@@ -6,23 +6,21 @@
   </p>
   <div class="space-x-4">
     <% if user_signed_in? %>
-      <%= button_to "Subscribe for R$ 5,00/mês",
-        purchase_checkout_path,
-        method: :post,
-        data: { turbo: false },
-        params: { price_id: monthly_price },
-        form_class: "inline",
-        class: "px-3 py-4 cursor-pointer bg-indigo-600 text-center rounded font-bold text-white shadow-sm"
-      %>
-
-      <%= button_to "Subscribe for R$ 50,00/mês",
-        purchase_checkout_path,
-        method: :post,
-        data: { turbo: false },
-        params: { price_id: annual_price },
-        form_class: "inline",
-        class: "px-3 py-4 cursor-pointer bg-indigo-600 text-center rounded font-bold text-white shadow-sm"
-      %>
+      <% @prices.sort_by(&:unit_amount).each do |price| %>
+        <%
+          value = number_to_currency_br(price.unit_amount / 100)
+          interval = price.recurring.interval
+          label = "Subscribe for #{value}\/#{interval}"
+        %>
+        <%= button_to label,
+          purchase_checkout_path,
+          method: :post,
+          data: { turbo: false },
+          params: { price_id: price.id },
+          form_class: "inline",
+          class: "px-3 py-4 cursor-pointer bg-indigo-600 text-center rounded font-bold text-white shadow-sm"
+        %>
+      <% end %>
     <% else %>
       <%= link_to "Subscribe for R$ 5,00/mês", new_user_session_path, class: "px-3 py-4 bg-indigo-600 text-center rounded font-bold text-white shadow-sm" %>
       <%= link_to "Subscribe for R$ 50,00/ano", new_user_session_path, class: "px-3 py-4 bg-indigo-600 text-center rounded font-bold text-white shadow-sm" %>

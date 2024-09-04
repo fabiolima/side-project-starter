@@ -36,30 +36,67 @@ class Stripe::WebhooksController < ApplicationController
     #
 
     case event.type
-    when "customer.created"
-      customer = event.data.object
-      user = User.find_by(email: customer.email)
-      user.update(stripe_id: customer.id) unless user.nil?
-
-    when "checkout.session.completed"
-      customer = event.data.object
-      return unless User.exists?(customer.client_reference_id)
-
-      user = User.find(customer.client_reference_id)
-      stripe_subscription = Stripe::Subscription.retrieve(customer.subscription)
-
-      Subscription.create(
-        subscription_id: stripe_subscription.id,
-        customer_id: stripe_subscription.customer,
-        plan_id: stripe_subscription.plan.id,
-        status: stripe_subscription.status,
-        current_period_start: Time.at(stripe_subscription.current_period_start).to_datetime,
-        current_period_end: Time.at(stripe_subscription.current_period_end).to_datetime,
-        interval: stripe_subscription.plan.interval,
-        user: user,
-      )
+    when "customer.created"; handle_customer_created(event)
+    when "checkout.session.completed"; handle_checkout_completed(event)
+    when "invoice.payment_succeeded"; handle_payment_succeeded(event)
     end
 
     render json: { message: "success" }
+  end
+
+  private
+
+  def handle_customer_created(event)
+    customer = event.data.object
+    user = User.find_by(email: customer.email)
+    user.update(stripe_id: customer.id) unless user.nil?
+  end
+
+  def handle_checkout_completed(event)
+    customer = event.data.object
+    return unless User.exists?(customer.client_reference_id)
+
+    user = User.find(customer.client_reference_id)
+    stripe_subscription = Stripe::Subscription.retrieve(customer.subscription)
+
+    Subscription.create(
+      stripe_subscription_id: stripe_subscription.id,
+      stripe_customer_id: stripe_subscription.customer,
+      stripe_plan_id: stripe_subscription.plan.id,
+      status: stripe_subscription.status,
+      current_period_start: Time.at(stripe_subscription.current_period_start).to_datetime,
+      current_period_end: Time.at(stripe_subscription.current_period_end).to_datetime,
+      interval: stripe_subscription.plan.interval,
+      user: user,
+    )
+  end
+
+  def handle_payment_succeeded(event)
+    invoice = event.data.object
+    subscription_id = invoice.subscription
+    payment_intent_id = invoice.payment_intent
+
+    if invoice.billing_reason = "subscription_create"
+      # The subscription automatically activates after successful payment
+      # Set the payment method used to pay the first invoice
+      # as the default payment method for that subscription
+
+      # Retrieve the payment intent used to pay the subscription
+      payment_intent = Stripe::PaymentIntent.retrieve(payment_intent_id)
+
+      # Set the default payment method
+      Stripe::Subscription.update(subscription_id, default_payment_method: payment_intent.payment_method)
+    end
+
+    stripe_subscription = Stripe::Subscription.retrieve(subscription_id)
+    subscription = Subscription.find_by(stripe_subscription_id: subscription_id)
+
+    subscription.update(
+      current_period_start: Time.at(stripe_subscription.current_period_start).to_datetime,
+      current_period_end: Time.at(stripe_subscription.current_period_end).to_datetime,
+      stripe_plan_id: stripe_subscription.plan.id,
+      interval: stripe_subscription.plan.interval,
+      status: stripe_subscription.status,
+    )
   end
 end
