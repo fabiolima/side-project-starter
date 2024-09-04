@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
+# Handles Stripe webhooks
 class Stripe::WebhooksController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [ :create ]
 
-  def create
+  def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     # Replace this endpoint secret with your endpoint's unique secret
     # If you are testing with the CLI, find the secret by running 'stripe listen'
     # If you are using an endpoint defined with the API or dashboard, look in your webhook settings
@@ -15,11 +18,11 @@ class Stripe::WebhooksController < ApplicationController
 
       begin
         event = Stripe::Webhook.construct_event(payload, sig_header, webhook_secret)
-      rescue JSON::ParserError => e
+      rescue JSON::ParserError
         # Invalid payload
         status 400
         return
-      rescue Stripe::SignatureVerificationError => e
+      rescue Stripe::SignatureVerificationError
         # Invalid signature
         puts "⚠️  Webhook signature verification failed."
         status 400
@@ -30,15 +33,10 @@ class Stripe::WebhooksController < ApplicationController
       event = Stripe::Event.construct_from(data)
     end
 
-    # event_type = event["type"]
-    # data = event["data"]
-    # data_object = data["object"]
-    #
-
     case event.type
-    when "customer.created"; handle_customer_created(event)
-    when "checkout.session.completed"; handle_checkout_completed(event)
-    when "invoice.payment_succeeded"; handle_payment_succeeded(event)
+    when "customer.created" then handle_customer_created(event)
+    when "checkout.session.completed" then handle_checkout_completed(event)
+    when "invoice.payment_succeeded" then handle_payment_succeeded(event)
     end
 
     render json: { message: "success" }
@@ -49,10 +47,10 @@ class Stripe::WebhooksController < ApplicationController
   def handle_customer_created(event)
     customer = event.data.object
     user = User.find_by(email: customer.email)
-    user.update(stripe_id: customer.id) unless user.nil?
+    user&.update(stripe_id: customer.id)
   end
 
-  def handle_checkout_completed(event)
+  def handle_checkout_completed(event) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     customer = event.data.object
     return unless User.exists?(customer.client_reference_id)
 
@@ -67,16 +65,16 @@ class Stripe::WebhooksController < ApplicationController
       current_period_start: Time.at(stripe_subscription.current_period_start).to_datetime,
       current_period_end: Time.at(stripe_subscription.current_period_end).to_datetime,
       interval: stripe_subscription.plan.interval,
-      user: user,
+      user:
     )
   end
 
-  def handle_payment_succeeded(event)
+  def handle_payment_succeeded(event) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     invoice = event.data.object
     subscription_id = invoice.subscription
     payment_intent_id = invoice.payment_intent
 
-    if invoice.billing_reason = "subscription_create"
+    if invoice.billing_reason == "subscription_create"
       # The subscription automatically activates after successful payment
       # Set the payment method used to pay the first invoice
       # as the default payment method for that subscription
@@ -96,7 +94,7 @@ class Stripe::WebhooksController < ApplicationController
       current_period_end: Time.at(stripe_subscription.current_period_end).to_datetime,
       stripe_plan_id: stripe_subscription.plan.id,
       interval: stripe_subscription.plan.interval,
-      status: stripe_subscription.status,
+      status: stripe_subscription.status
     )
   end
 end
