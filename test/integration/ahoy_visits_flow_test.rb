@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
-class AhoyVisitsFlow  < ActionDispatch::IntegrationTest
+class AhoyVisitsFlow < ActionDispatch::IntegrationTest
   setup do
     Ahoy::Visit.delete_all
     Ahoy.track_bots = true

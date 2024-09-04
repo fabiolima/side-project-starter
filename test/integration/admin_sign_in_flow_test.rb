@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
-class AdminSignInFlowTest  < ActionDispatch::IntegrationTest
+class AdminSignInFlowTest < ActionDispatch::IntegrationTest
   setup do
     Admin.delete_all
   end

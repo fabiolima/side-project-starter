@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
-class UserSignInUpFlowTest  < ActionDispatch::IntegrationTest
+class UserSignInUpFlowTest < ActionDispatch::IntegrationTest
   setup do
     User.delete_all
   end
@@ -9,7 +11,8 @@ class UserSignInUpFlowTest  < ActionDispatch::IntegrationTest
     get new_user_registration_path
     assert_response :success
 
-    post user_registration_path, params: { user: { email: "user@user.com", password: "123123", password_confirmation: "123123" } }
+    post user_registration_path,
+         params: { user: { email: "user@user.com", password: "123123", password_confirmation: "123123" } }
     follow_redirect!
     assert_equal app_dashboard_path, path
   end

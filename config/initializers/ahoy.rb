@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Ahoy::Store < Ahoy::DatabaseStore
 end
 
@@ -11,7 +13,7 @@ Ahoy.api = false
 # see https://github.com/ankane/ahoy#geocoding
 Ahoy.geocode = false
 
-Ahoy.exclude_method = lambda do |controller, request|
+Ahoy.exclude_method = lambda do |_controller, request|
   def exclude_page?(current_path)
     [
       "/admin/dashboard",
@@ -23,6 +25,7 @@ Ahoy.exclude_method = lambda do |controller, request|
 
   def invalid_referrer?(referrer)
     return false if Rails.env == "test"
+
     referrer.nil?
   end
 

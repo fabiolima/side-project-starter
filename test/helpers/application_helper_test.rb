@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class ApplicationHelperTest < ActionView::TestCase
   test "active_link_to" do
-    def current_page?(link)
+    def current_page?(_link)
       true
     end
 
@@ -22,7 +24,7 @@ class ApplicationHelperTest < ActionView::TestCase
       link_to("Home", root_path, class: "foo bg-rose-400")
     )
 
-    def current_page?(link)
+    def current_page?(_link)
       false
     end
 

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
-class AdminSignUpFlowTest  < ActionDispatch::IntegrationTest
+class AdminSignUpFlowTest < ActionDispatch::IntegrationTest
   setup do
     Admin.delete_all
   end
@@ -9,7 +11,8 @@ class AdminSignUpFlowTest  < ActionDispatch::IntegrationTest
     get new_admin_registration_path
     assert_response :success
 
-    post admin_registration_path, params: { admin: { email: "admin@admin.com", password: "123123", password_confirmation: "123123" } }
+    post admin_registration_path,
+         params: { admin: { email: "admin@admin.com", password: "123123", password_confirmation: "123123" } }
     follow_redirect!
     assert_equal admin_dashboard_path, path
   end

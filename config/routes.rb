@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   devise_for :admins, controllers: {
     sessions: "admins/sessions",
@@ -15,7 +17,7 @@ Rails.application.routes.draw do
   namespace :admin do
     namespace :dashboard do
       get "/" => "home#index" # Admin::Dashboard::HomeController
-      resources :users, except: [ :create, :edit, :new ] do
+      resources :users, except: %i[create edit new] do
         post :ban, on: :member
         post :unban, on: :member
       end
@@ -28,7 +30,7 @@ Rails.application.routes.draw do
       get :/, to: "home#index"
       post :billings, to: "home#billings"
 
-      resources :profiles, except: [ :index, :destroy, :create ]
+      resources :profiles, except: %i[index destroy create]
     end
   end
 
