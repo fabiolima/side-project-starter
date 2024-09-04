@@ -1,7 +1,6 @@
-class HomeController < ApplicationController
-  def index
-  end
+# frozen_string_literal: true
 
-  def about
-  end
+# Handles website home page
+class HomeController < ApplicationController
+  def index; end
 end
