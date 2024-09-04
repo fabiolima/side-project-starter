@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# User's profile model.
 class Profile < ApplicationRecord
   belongs_to :user
 
@@ -9,12 +12,12 @@ class Profile < ApplicationRecord
   def update_stripe_customer
     return unless
       saved_change_to_attribute?(:first_name) ||
-      saved_change_to_attribute?(:last_name) || self.user.stripe_id.nil?
+      saved_change_to_attribute?(:last_name) || user.stripe_id.nil?
 
-    Stripe::Customer.update(self.user.stripe_id, { name:  full_name })
+    Stripe::Customer.update(user.stripe_id, { name: full_name })
   end
 
   def full_name
-    "#{self.first_name} #{self.last_name}"
+    "#{first_name} #{last_name}"
   end
 end

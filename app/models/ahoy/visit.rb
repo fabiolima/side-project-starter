@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Visit model
 class Ahoy::Visit < ApplicationRecord
   self.table_name = "ahoy_visits"
 

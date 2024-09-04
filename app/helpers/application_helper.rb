@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require "uri"
 
+# Global helpers
 module ApplicationHelper
   include Pagy::Frontend
 
