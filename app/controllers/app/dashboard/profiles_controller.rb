@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
+# Handle the profile page inside user's dashboard.
 class App::Dashboard::ProfilesController < ApplicationController
   before_action :authenticate_user!
   layout "user_administrator"
   def edit
-    # debugger
     @profile = current_user.profile
   end
 
