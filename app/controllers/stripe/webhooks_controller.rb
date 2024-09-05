@@ -34,6 +34,7 @@ class Stripe::WebhooksController < ApplicationController
     when "customer.created" then handle_customer_created(event)
     when "checkout.session.completed" then handle_checkout_completed(event)
     when "invoice.payment_succeeded" then handle_payment_succeeded(event)
+    when "invoice.payment_failed" then handle_payment_failed(event)
     end
 
     render json: { message: "success" }
@@ -93,5 +94,19 @@ class Stripe::WebhooksController < ApplicationController
       interval: stripe_subscription.plan.interval,
       status: stripe_subscription.status
     )
+  end
+
+  def handle_payment_failed(event)
+    invoice = event.data.object
+    # The payment failed or the customer does not have a valid payment method.
+    # The subscription becomes past_due so we need to notify the customer and send them to the customer portal
+    # to update their payment information.
+
+    # Find the user by stripe id or customer id from Stripe event response
+    user = User.find_by(stripe_id: invoice.customer)
+    # Send an email to that customer detailing the problem with instructions on how to solve it.
+    return unless user.nil?
+
+    SubscriptionMailer.with(user:).payment_failed.deliver_now
   end
 end
