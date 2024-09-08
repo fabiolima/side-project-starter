@@ -16,6 +16,8 @@ Ahoy.geocode = false
 Ahoy.exclude_method = lambda do |_controller, request|
   def exclude_page?(current_path)
     [
+      "/stripe",
+      "/purchage",
       "/admin/dashboard",
       "/admins",
       "/users",

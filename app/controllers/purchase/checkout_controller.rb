@@ -14,9 +14,9 @@ class Purchase::CheckoutController < ApplicationController
       cancel_url: pricing_url,
       payment_method_types: ["card"],
       mode: "subscription",
-      subscription_data: {
-        trial_end: (Time.now + 3.days).to_i
-      },
+      # subscription_data: {
+      #   trial_end: (Time.now + 3.days).to_i
+      # },
       line_items: [{
         quantity: 1,
         price:

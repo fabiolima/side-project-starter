@@ -20,4 +20,12 @@ class User < ApplicationRecord
   def create_stripe_customer
     Stripe::Customer.create(email:)
   end
+
+  def active_subscription?
+    subscriptions.any? { |sub| sub.status == "active" }
+  end
+
+  def active_subscription
+    subscriptions.find { |sub| sub.status == "active" }
+  end
 end

@@ -4,7 +4,7 @@
 class Stripe::WebhooksController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [ :create ]
 
-  def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity
     webhook_secret = Rails.application.credentials.dig(:stripe, :webhook_secret)
     payload = request.body.read
 
@@ -32,6 +32,8 @@ class Stripe::WebhooksController < ApplicationController
 
     case event.type
     when "customer.created" then handle_customer_created(event)
+    when "customer.subscription.updated" then handle_subscription_updated(event)
+    when "customer.subscription.deleted" then handle_subscription_deleted(event)
     when "checkout.session.completed" then handle_checkout_completed(event)
     when "invoice.payment_succeeded" then handle_payment_succeeded(event)
     when "invoice.payment_failed" then handle_payment_failed(event)
@@ -62,6 +64,8 @@ class Stripe::WebhooksController < ApplicationController
       status: stripe_subscription.status,
       current_period_start: Time.at(stripe_subscription.current_period_start).to_datetime,
       current_period_end: Time.at(stripe_subscription.current_period_end).to_datetime,
+      cancel_at: stripe_subscription.cancel_at,
+      canceled_at: stripe_subscription.canceled_at,
       interval: stripe_subscription.plan.interval,
       user:
     )
@@ -73,7 +77,7 @@ class Stripe::WebhooksController < ApplicationController
     invoice = event.data.object
 
     stripe_subscription = Stripe::Subscription.retrieve(invoice.subscription)
-    subscription = Subscription.find_by(stripe_subscription_id: subscription_id)
+    subscription = Subscription.find_by(stripe_subscription_id: invoice.subscription)
 
     subscription.update_with_stripe_subscription stripe_subscription
   end
@@ -91,5 +95,22 @@ class Stripe::WebhooksController < ApplicationController
     subscription.update_with_stripe_subscription stripe_subscription
 
     SubscriptionMailer.with(user:).payment_failed.deliver_now
+  end
+
+  def handle_subscription_updated(event)
+    stripe_subscription = event.data.object
+    subscription = Subscription.find_by(stripe_subscription_id: stripe_subscription.id)
+
+    # Maybe, because of concurrency, subscription still not created locally.
+    # Let other callbacks handle the creation first.
+    return if subscription.nil?
+
+    subscription.update_with_stripe_subscription stripe_subscription
+  end
+
+  def handle_subscription_deleted(event)
+    stripe_subscription = event.data.object
+    puts stripe_subscription.status
+    puts stripe_subscription.cancel_at
   end
 end

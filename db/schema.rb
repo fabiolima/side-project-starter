@@ -89,6 +89,8 @@ ActiveRecord::Schema[7.2].define(version: 20_240_902_195_257) do
     t.string "interval"
     t.datetime "current_period_end"
     t.datetime "current_period_start"
+    t.datetime "cancel_at"
+    t.datetime "canceled_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
