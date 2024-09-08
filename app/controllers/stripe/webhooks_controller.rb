@@ -65,47 +65,30 @@ class Stripe::WebhooksController < ApplicationController
       interval: stripe_subscription.plan.interval,
       user:
     )
+
+    SubscriptionMailer.with(user:).subscription_created.deliver_now
   end
 
-  def handle_payment_succeeded(event) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def handle_payment_succeeded(event)
     invoice = event.data.object
-    subscription_id = invoice.subscription
-    payment_intent_id = invoice.payment_intent
 
-    if invoice.billing_reason == "subscription_create"
-      # The subscription automatically activates after successful payment
-      # Set the payment method used to pay the first invoice
-      # as the default payment method for that subscription
-
-      # Retrieve the payment intent used to pay the subscription
-      payment_intent = Stripe::PaymentIntent.retrieve(payment_intent_id)
-
-      # Set the default payment method
-      Stripe::Subscription.update(subscription_id, default_payment_method: payment_intent.payment_method)
-    end
-
-    stripe_subscription = Stripe::Subscription.retrieve(subscription_id)
+    stripe_subscription = Stripe::Subscription.retrieve(invoice.subscription)
     subscription = Subscription.find_by(stripe_subscription_id: subscription_id)
 
-    subscription.update(
-      current_period_start: Time.at(stripe_subscription.current_period_start).to_datetime,
-      current_period_end: Time.at(stripe_subscription.current_period_end).to_datetime,
-      stripe_plan_id: stripe_subscription.plan.id,
-      interval: stripe_subscription.plan.interval,
-      status: stripe_subscription.status
-    )
+    subscription.update_with_stripe_subscription stripe_subscription
   end
 
   def handle_payment_failed(event)
     invoice = event.data.object
-    # The payment failed or the customer does not have a valid payment method.
-    # The subscription becomes past_due so we need to notify the customer and send them to the customer portal
-    # to update their payment information.
-
-    # Find the user by stripe id or customer id from Stripe event response
     user = User.find_by(stripe_id: invoice.customer)
-    # Send an email to that customer detailing the problem with instructions on how to solve it.
-    return unless user.nil?
+
+    # User is at checkout page and he can try again.
+    return if user.nil? || invoice.billing_reason == "subscription_create"
+
+    subscription = Subscription.find_by(stripe_subscription_id: invoice.subscription)
+    stripe_subscription = Stripe::Subscription.retrieve(invoice.subscription)
+
+    subscription.update_with_stripe_subscription stripe_subscription
 
     SubscriptionMailer.with(user:).payment_failed.deliver_now
   end
