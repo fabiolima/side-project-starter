@@ -21,11 +21,13 @@ class User < ApplicationRecord
     Stripe::Customer.create(email:)
   end
 
-  def active_subscription?
-    subscriptions.any? { |sub| sub.status == "active" }
+  def current_subscription?
+    Subscription.where(user: id, status: %w[active past_due trialing]).count.positive?
+    # subscriptions.any? { |sub| sub.status == "active" }
   end
 
-  def active_subscription
-    subscriptions.find { |sub| sub.status == "active" }
+  def current_subscription
+    Subscription.where(user: id, status: %w[active past_due trialing]).first
+    # subscriptions.find { |sub| sub.status == "active" }
   end
 end

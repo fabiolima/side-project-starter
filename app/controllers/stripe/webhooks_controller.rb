@@ -37,6 +37,7 @@ class Stripe::WebhooksController < ApplicationController
     when "checkout.session.completed" then handle_checkout_completed(event)
     when "invoice.payment_succeeded" then handle_payment_succeeded(event)
     when "invoice.payment_failed" then handle_payment_failed(event)
+    when "product.updated" then handle_product_updated(event)
     end
 
     render json: { message: "success" }
@@ -56,8 +57,16 @@ class Stripe::WebhooksController < ApplicationController
 
     user = User.find(customer.client_reference_id)
     stripe_subscription = Stripe::Subscription.retrieve(customer.subscription)
+    product_id = stripe_subscription.items.data.first.price.product
+    price_id = stripe_subscription.items.data.first.price.id
+    product = Stripe::Product.retrieve(product_id)
+    price = Stripe::Price.retrieve(price_id)
 
     Subscription.create(
+      stripe_price_id: price.id,
+      stripe_product_id: product.id,
+      product_name: product.name,
+      price_unit_amount: price.unit_amount,
       stripe_subscription_id: stripe_subscription.id,
       stripe_customer_id: stripe_subscription.customer,
       stripe_plan_id: stripe_subscription.plan.id,
@@ -76,8 +85,11 @@ class Stripe::WebhooksController < ApplicationController
   def handle_payment_succeeded(event)
     invoice = event.data.object
 
-    stripe_subscription = Stripe::Subscription.retrieve(invoice.subscription)
     subscription = Subscription.find_by(stripe_subscription_id: invoice.subscription)
+
+    return if subscription.nil?
+
+    stripe_subscription = Stripe::Subscription.retrieve(invoice.subscription)
 
     subscription.update_with_stripe_subscription stripe_subscription
   end
@@ -112,5 +124,8 @@ class Stripe::WebhooksController < ApplicationController
     stripe_subscription = event.data.object
     puts stripe_subscription.status
     puts stripe_subscription.cancel_at
+  end
+
+  def handle_product_updated(event)
   end
 end

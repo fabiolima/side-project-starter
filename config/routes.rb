@@ -28,15 +28,21 @@ Rails.application.routes.draw do
   namespace :app do
     namespace :dashboard do
       get :/, to: "home#index"
-      post :billings, to: "home#billings"
+
+      namespace :billings do
+        post :/, to: "billings"
+        get :/, to: "show"
+      end
 
       resources :profiles, except: %i[index destroy create]
     end
   end
 
   namespace :purchase do
-    post :checkout, to: "checkout#create"
-    get :success, to: "checkout#success"
+    namespace :checkout do
+      post :/, to: "create"
+      get :success, to: "success"
+    end
   end
 
   resources :subscriptions

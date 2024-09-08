@@ -21,7 +21,6 @@
       <nav class="max-w-4xl mx-auto" data-controller='toggle'>
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div class="relative flex h-16 items-center justify-between">
-
             <!-- Mobile menu button-->
             <div class="absolute w-12 inset-y-0 left-0 flex items-center  lg:hidden">
               <button data-action='click->toggle#toggle touch->toggle#toggle' type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
@@ -33,13 +32,11 @@
               </button>
             </div>
             <!--  End menu button -->
-
             <div class="w-full flex justify-center">
               <h2 class="text-lg font-bold">
                 <%= yield :nav_title %>
               </h2>
             </div>
-
             <!--
             <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               <div
@@ -96,16 +93,11 @@
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 mr-2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                   </svg>
-
                   Profile
                 <% end %>
               </li>
               <li>
-                <%= button_to app_dashboard_billings_path, {
-                  method: :post,
-                  data: { turbo: false },
-                  class: "flex items-center rounded-xl font-bold text-sm py-3 px-4 text-gray-600 hover:text-black"
-                } do %>
+                <%= active_link_to app_dashboard_billings_path, active_classes: "bg-yellow-200 text-yellow-900 hover:text-yellow-900", class: "flex items-center rounded-xl font-bold text-sm py-3 px-4 text-gray-600 hover:text-black" do %>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 mr-2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m3.75 9v7.5m2.25-6.466a9.016 9.016 0 0 0-3.461-.203c-.536.072-.974.478-1.021 1.017a4.559 4.559 0 0 0-.018.402c0 .464.336.844.775.994l2.95 1.012c.44.15.775.53.775.994 0 .136-.006.27-.018.402-.047.539-.485.945-1.021 1.017a9.077 9.077 0 0 1-3.461-.203M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                   </svg>
@@ -128,6 +120,11 @@
     <main class="px-4 min-h-screen ml-0 lg:ml-60 overflow-auto">
       <div class="max-w-4xl mx-auto">
         <%= yield :pre_content %>
+        <% if flash["notice"] %>
+          <p class="p-4 bg-indigo-100 rounded-xl mb-4">
+            <%= flash["notice"] %>
+          </p>
+        <% end %>
         <div class="p-8 bg-white rounded-3xl">
           <%= yield %>
         </div>

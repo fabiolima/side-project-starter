@@ -10,6 +10,12 @@ class CreateSubscriptions < ActiveRecord::Migration[7.2]
       t.string :status
       t.string :interval
 
+      t.string :stripe_product_id
+      t.string :product_name
+
+      t.string :stripe_price_id
+      t.string :price_unit_amount
+
       t.datetime :current_period_end
       t.datetime :current_period_start
       t.datetime :cancel_at

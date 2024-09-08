@@ -1,0 +1,40 @@
+<%= content_for :nav_title do %> Billings <%end%>
+<% if @subscription
+
+  status = @subscription.status.to_sym
+  backgrounds = {
+    active: "bg-green-200",
+    past_due: "bg-orange-200",
+    trialing: "bg-blue-200"
+  }
+end %>
+<% if @subscription %>
+  <div>
+    <h2 class="text-2xl font-bold mb-4">My plan</h2>
+    <div class="flex flex-col md:flex-row p-4 bg-white border rounded-xl text-gray-800">
+      <div class="md:flex-1">
+        <div class="flex justify-between">
+          <div class="text-xs font-semibold px-2 py-1 rounded mb-1 <%= backgrounds[status] %>">
+            <%= @subscription.status %>
+          </div>
+        </div>
+        <span class="font-bold">
+          <%= @subscription.product_name %>
+        </span>
+        <div class="text-sm text-gray-600">
+          <%= number_to_currency_br(@subscription.price_unit_amount.to_i / 100) %>/<%= @subscription.interval %>
+        </div>
+      </div>
+      <div>
+        <%= button_to app_dashboard_billings_path, {
+            form_class: "",
+            method: :post,
+            data: { turbo: false },
+            class: "rounded-xl bg-gray-100 font-bold text-sm py-2 px-3 text-gray-600 hover:text-black"
+          } do %>
+          Manage subscription
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
