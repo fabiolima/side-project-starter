@@ -3,6 +3,7 @@
 # Subscription model that locally represents a Stripe::Subscription
 class Subscription < ApplicationRecord
   belongs_to :user
+  belongs_to :product
 
   def update_with_stripe_subscription(stripe_subscription) # rubocop:disable Metrics/AbcSize
     update(

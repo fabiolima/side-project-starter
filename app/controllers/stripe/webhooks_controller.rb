@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Handles Stripe webhooks
-class Stripe::WebhooksController < ApplicationController
+class Stripe::WebhooksController < ApplicationController # rubocop:disable Metrics/ClassLength
   skip_before_action :verify_authenticity_token, only: [ :create ]
 
   def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity
@@ -57,26 +57,28 @@ class Stripe::WebhooksController < ApplicationController
 
     user = User.find(customer.client_reference_id)
     stripe_subscription = Stripe::Subscription.retrieve(customer.subscription)
-    product_id = stripe_subscription.items.data.first.price.product
+    stripe_product_id = stripe_subscription.items.data.first.price.product
     price_id = stripe_subscription.items.data.first.price.id
-    product = Stripe::Product.retrieve(product_id)
     price = Stripe::Price.retrieve(price_id)
 
+    product = find_product(stripe_product_id)
+
     Subscription.create(
-      stripe_price_id: price.id,
-      stripe_product_id: product.id,
-      product_name: product.name,
-      price_unit_amount: price.unit_amount,
       stripe_subscription_id: stripe_subscription.id,
       stripe_customer_id: stripe_subscription.customer,
       stripe_plan_id: stripe_subscription.plan.id,
+      stripe_price_id: price.id,
+
+      user:,
+      product:,
+
+      interval: stripe_subscription.plan.interval,
       status: stripe_subscription.status,
+      price_unit_amount: price.unit_amount,
       current_period_start: Time.at(stripe_subscription.current_period_start).to_datetime,
       current_period_end: Time.at(stripe_subscription.current_period_end).to_datetime,
       cancel_at: stripe_subscription.cancel_at,
-      canceled_at: stripe_subscription.canceled_at,
-      interval: stripe_subscription.plan.interval,
-      user:
+      canceled_at: stripe_subscription.canceled_at
     )
 
     SubscriptionMailer.with(user:).subscription_created.deliver_now
@@ -127,5 +129,25 @@ class Stripe::WebhooksController < ApplicationController
   end
 
   def handle_product_updated(event)
+    stripe_product = event.data.object
+
+    Product
+      .where(stripe_product_id: stripe_product.id)
+      .update({
+                name: stripe_product.name
+              })
+  end
+
+  def find_product(stripe_product_id)
+    local_product = Product.find_by(stripe_product_id:)
+
+    return local_product unless local_product.nil?
+
+    stripe_product = Stripe::Product.retrieve(stripe_product_id)
+
+    Product.create(
+      stripe_product_id:,
+      name: stripe_product.name
+    )
   end
 end

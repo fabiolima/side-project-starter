@@ -143,6 +143,8 @@ GEM
     matrix (0.4.2)
     mini_mime (1.1.5)
     minitest (5.25.1)
+    mocha (2.4.5)
+      ruby2_keywords (>= 0.0.5)
     msgpack (1.7.2)
     net-imap (0.4.14)
       date
@@ -242,6 +244,7 @@ GEM
     rubocop-ast (1.32.1)
       parser (>= 3.3.1.0)
     ruby-progressbar (1.13.0)
+    ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     safely_block (0.4.0)
     securerandom (0.3.1)
@@ -319,6 +322,7 @@ DEPENDENCIES
   devise (~> 4.9)
   importmap-rails
   jbuilder
+  mocha
   pagy (~> 9.0)
   pg (~> 1.1)
   puma (>= 5.0)

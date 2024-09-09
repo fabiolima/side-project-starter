@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_02_195257) do
+ActiveRecord::Schema[7.2].define(version: 20_240_902_195_257) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -32,7 +34,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_02_195257) do
     t.string "name"
     t.jsonb "properties"
     t.datetime "time"
-    t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time"
+    t.index %w[name time], name: "index_ahoy_events_on_name_and_time"
     t.index ["properties"], name: "index_ahoy_events_on_properties", opclass: :jsonb_path_ops, using: :gin
     t.index ["user_id"], name: "index_ahoy_events_on_user_id"
     t.index ["visit_id"], name: "index_ahoy_events_on_visit_id"
@@ -66,7 +68,14 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_02_195257) do
     t.datetime "started_at"
     t.index ["user_id"], name: "index_ahoy_visits_on_user_id"
     t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true
-    t.index ["visitor_token", "started_at"], name: "index_ahoy_visits_on_visitor_token_and_started_at"
+    t.index %w[visitor_token started_at], name: "index_ahoy_visits_on_visitor_token_and_started_at"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "name"
+    t.string "stripe_product_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "profiles", force: :cascade do |t|
@@ -82,12 +91,11 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_02_195257) do
     t.string "stripe_plan_id"
     t.string "stripe_customer_id"
     t.string "stripe_subscription_id"
+    t.string "stripe_price_id"
     t.bigint "user_id", null: false
+    t.bigint "product_id", null: false
     t.string "status"
     t.string "interval"
-    t.string "stripe_product_id"
-    t.string "product_name"
-    t.string "stripe_price_id"
     t.string "price_unit_amount"
     t.datetime "current_period_end"
     t.datetime "current_period_start"
@@ -95,6 +103,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_02_195257) do
     t.datetime "canceled_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_subscriptions_on_product_id"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
@@ -113,5 +122,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_02_195257) do
   end
 
   add_foreign_key "profiles", "users"
+  add_foreign_key "subscriptions", "products"
   add_foreign_key "subscriptions", "users"
 end
