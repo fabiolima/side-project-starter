@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  active: false
+  currency: MyString
+  unit_amount_decimal: MyString
+  unit_amount: 1
+  stripe_price_id: MyString
+
+two:
+  active: false
+  currency: MyString
+  unit_amount_decimal: MyString
+  unit_amount: 1
+  stripe_price_id: MyString

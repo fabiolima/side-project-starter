@@ -25,6 +25,16 @@ module ApplicationHelper
     number_to_currency(number, unit: "R$ ", separator: ",", delimiter: ".")
   end
 
+  def stripe_products_url(product = nil)
+    url = "https://dashboard.stripe.com/#{Rails.env.development? ? 'test/products' : '/products'}"
+
+    if product.nil?
+      url
+    else
+      "#{url}/#{product.stripe_product_id}"
+    end
+  end
+
   def admin_dashboard_links
     [
       { label: "Dashboard", path: admin_dashboard_path, icon: "home" },

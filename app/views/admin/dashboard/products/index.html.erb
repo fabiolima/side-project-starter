@@ -40,9 +40,12 @@
       But if you don't
     </p>
     <p class="text-center">
-      <a href="#" class="rounded-lg bg-indigo-100 font-semibold text-sm py-2 px-3 text-gray-800 hover:bg-indigo-200">Create your first product</a>
+      <a target="_blank"  href="<%= stripe_products_url %>" class="rounded-lg bg-indigo-100 font-semibold text-sm py-2 px-3 text-gray-800 hover:bg-indigo-200">Create your first product</a>
     </p>
   </div>
 <% else %>
+  <p class="border rounded-xl bg-slate-100 p-4 md:p-6 mb-4">
+    This page is <b>read-only.</b> You should manage your products in Stripe and then sync them here.
+  </p>
   <%= render "products", { products: @products } %>
 <% end %>
