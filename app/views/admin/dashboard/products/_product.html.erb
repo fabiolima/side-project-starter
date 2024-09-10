@@ -1,0 +1,34 @@
+<li id="<%= dom_id(product) %>" class="flex flex-col md:flex-row p-4 bg-white border rounded-xl text-gray-800">
+  <div class="md:flex-1 flex flex-col items-start">
+    <h3 class="mb-2 text-lg font-semibold">
+      <a href="<%= stripe_products_url(product) %>" target="_blank">
+        <%= icon "arrow-top-right-on-square", classes: "inline size-5 mr-1 -mt-1" %>
+        <%= product.name %>
+      </a>
+    </h3>
+    <div class="mb-2">
+      <% product.prices.each do |price| %>
+        <span class="p-1 text-sm bg-blue-100 text-gray-800 inline-block rounded mr-2">
+          <%= number_to_currency_br(price.unit_amount / 100)%>/<%= price.interval %>
+        </span>
+      <% end %>
+    </div>
+    <button
+        data-controller="clipboard"
+        data-clipboard-text-value="<%= product.stripe_product_id %>"
+        data-action="clipboard#copy"
+        class="p-1 text-sm bg-slate-100 text-gray-800 inline-block rounded"
+      >
+      <%= icon "clipboard", classes: "inline size-4 mr-1" %>
+      stripe id: <%= product.stripe_product_id %>
+    </button>
+  </div>
+  <div class="mt-2 md:mt-0">
+    <span class="mr-2 text-xs font-semibold px-2 py-1 rounded mb-1 <%= product.active ? 'bg-green-200' : 'bg-gray-200' %>">
+      <%= product.active ? "active" : "inactive" %>
+    </span>
+    <span class="text-xs font-semibold px-2 py-1 rounded mb-1 <%= product.livemode ? 'bg-green-200' : 'bg-gray-200' %>">
+      live mode: <%= product.livemode.to_s %>
+    </span>
+  </div>
+</li>
