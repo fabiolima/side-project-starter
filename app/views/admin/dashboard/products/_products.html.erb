@@ -1,0 +1,28 @@
+<%= turbo_frame_tag "products" do %>
+  <ul class="space-y-3">
+    <% products.each do |p| %>
+      <li id="<%= dom_id(p) %>" class="flex flex-col md:flex-row p-4 bg-white border rounded-xl text-gray-800">
+        <div class="md:flex-1">
+          <h3 class="text-lg font-semibold"><%= p.name %></h3>
+          <button
+            data-controller="clipboard"
+            data-clipboard-text-value="<%= p.stripe_product_id %>"
+            data-action="clipboard#copy"
+            class="p-1 text-sm bg-slate-100 text-gray-800 inline-block rounded"
+          >
+            <%= icon "clipboard", classes: "inline size-4 mr-1" %>
+            stripe id: <%= p.stripe_product_id %>
+          </button>
+        </div>
+        <div class="mt-2 md:mt-0">
+          <span class="mr-2 text-xs font-semibold px-2 py-1 rounded mb-1 <%= p.active ? 'bg-green-200' : 'bg-gray-200' %>">
+            <%= p.active ? "active" : "inactive" %>
+          </span>
+          <span class="text-xs font-semibold px-2 py-1 rounded mb-1 <%= p.livemode ? 'bg-green-200' : 'bg-gray-200' %>">
+            live mode: <%= p.livemode.to_s %>
+          </span>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

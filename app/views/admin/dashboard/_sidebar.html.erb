@@ -1,0 +1,31 @@
+<aside class="hidden fixed inset-y-0 left-0 bg-white shadow-md max-h-screen w-60 lg:block">
+  <div class="flex flex-col justify-between h-full">
+    <div class="flex-grow">
+      <div class="px-4 h-16 flex items-center justify-center text-center border-b">
+        <%= link_to root_path do %>
+          <h1 class="text-xl font-bold leading-none"> Side Project </h1>
+        <% end %>
+      </div>
+      <div class="p-4">
+        <ul class="space-y-1">
+          <% admin_dashboard_links.each do |link| %>
+            <li>
+              <%= active_link_to link[:path], active_classes: "bg-yellow-200 text-yellow-900 hover:text-yellow-900", class: "flex items-center rounded-xl font-bold text-sm py-3 px-4 text-gray-600 hover:text-black" do %>
+                <%= icon link[:icon], classes: "size-5 mr-2" %>
+                <%= link[:label] %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+    <div class="p-4">
+      <%= button_to destroy_admin_session_path, method: :delete, class: "block px-4 py-2 text-sm text-gray-700 hover:text-black font-bold" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 inline-block me-1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18"></path>
+        </svg>
+        Logout
+      <% end %>
+    </div>
+  </div>
+</aside>

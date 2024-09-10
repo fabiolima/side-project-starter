@@ -21,6 +21,12 @@ Rails.application.routes.draw do
         post :ban, on: :member
         post :unban, on: :member
       end
+
+      namespace :products do
+        get :/, to: "index"
+        post :import, to: "import"
+        post :sync, to: "sync"
+      end
     end
   end
 

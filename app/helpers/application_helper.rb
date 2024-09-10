@@ -24,4 +24,23 @@ module ApplicationHelper
   def number_to_currency_br(number)
     number_to_currency(number, unit: "R$ ", separator: ",", delimiter: ".")
   end
+
+  def admin_dashboard_links
+    [
+      { label: "Dashboard", path: admin_dashboard_path, icon: "home" },
+      { label: "Users", path: admin_dashboard_users_path, icon: "users" },
+      { label: "Products", path: admin_dashboard_products_path, icon: "squares-2x2" }
+    ]
+  end
+
+  def icon(name, options = {})
+    options[:title] ||= name.underscore.humanize
+    options[:aria] = true
+    options[:nocomment] = true
+    options[:variant] ||= :outline
+    options[:class] = options.fetch(:classes, nil)
+    path = options.fetch(:path, "icons/#{options[:variant]}/#{name}.svg")
+    icon = path
+    inline_svg_tag(icon, options)
+  end
 end

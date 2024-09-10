@@ -134,7 +134,9 @@ class Stripe::WebhooksController < ApplicationController # rubocop:disable Metri
     Product
       .where(stripe_product_id: stripe_product.id)
       .update({
-                name: stripe_product.name
+                name: stripe_product.name,
+                livemode: stripe_product.livemode,
+                active: stripe_product.active
               })
   end
 
