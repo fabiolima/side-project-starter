@@ -13,6 +13,7 @@ class App::Dashboard::ProfilesController < ApplicationController
 
     respond_to do |format|
       if @profile.update update_params
+        Customer::CustomerUpdater.new(@profile).update
         format.html { redirect_to edit_app_dashboard_profile_path(@profile), notice: "Profile successifully updated." }
       else
         format.html { render :edit, status: :unprocessable_entity }

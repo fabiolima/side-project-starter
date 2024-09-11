@@ -11,23 +11,17 @@ class User < ApplicationRecord
   has_one :profile, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
 
-  after_create :init_profile, :create_stripe_customer
+  after_create :init_profile
 
   def init_profile
     create_profile!
   end
 
-  def create_stripe_customer
-    Stripe::Customer.create(email:)
-  end
-
   def current_subscription?
     Subscription.where(user: id, status: %w[active past_due trialing]).count.positive?
-    # subscriptions.any? { |sub| sub.status == "active" }
   end
 
   def current_subscription
     Subscription.where(user: id, status: %w[active past_due trialing]).first
-    # subscriptions.find { |sub| sub.status == "active" }
   end
 end

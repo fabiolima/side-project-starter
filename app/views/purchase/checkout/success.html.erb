@@ -1,4 +1,4 @@
 <div class="max-w-3xl mx-auto p-8 rounded-xl mt-6  text-center">
-  <h1 class="font-bold text-3xl mb-8">Thanks for subscribing, <%= @customer.name || @customer.email %>!</h1>
+  <h1 class="font-bold text-3xl mb-8">Thanks for subscribing, <%= @user.profile.first_name || @user.email %>!</h1>
   <%= link_to "Continue", app_dashboard_path, class: "px-3 py-3 bg-indigo-500	 no-underline text-center rounded font-bold text-white shadow-sm" %>
 </div>
