@@ -19,10 +19,10 @@ end %>
           </div>
         </div>
         <span class="font-bold">
-          <%= @subscription.product.name %>
+          <%= @subscription.price.product.name %>
         </span>
         <div class="text-sm text-gray-600">
-          <%= number_to_currency_br(@subscription.price_unit_amount.to_i / 100) %>/<%= @subscription.interval %>
+          <%= number_to_currency_br(@subscription.price.unit_amount.to_i / 100) %>/<%= @subscription.price.interval %>
         </div>
       </div>
       <div>

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Handles Stripe webhooks
-class Stripe::WebhooksController < ApplicationController # rubocop:disable Metrics/ClassLength
+class Stripe::WebhooksController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [ :create ]
 
   def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity
@@ -51,35 +51,15 @@ class Stripe::WebhooksController < ApplicationController # rubocop:disable Metri
     user&.update(stripe_id: customer.id)
   end
 
-  def handle_checkout_completed(event) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    customer = event.data.object
-    return unless User.exists?(customer.client_reference_id)
+  def handle_checkout_completed(event)
+    checkout_session = event.data.object
 
-    user = User.find(customer.client_reference_id)
-    stripe_subscription = Stripe::Subscription.retrieve(customer.subscription)
-    stripe_product_id = stripe_subscription.items.data.first.price.product
-    price_id = stripe_subscription.items.data.first.price.id
-    price = Stripe::Price.retrieve(price_id)
+    Subscription::SubscriptionCreator.new(
+      checkout_session.customer,
+      checkout_session.subscription
+    ).create
 
-    product = find_product(stripe_product_id)
-
-    Subscription.create(
-      stripe_subscription_id: stripe_subscription.id,
-      stripe_customer_id: stripe_subscription.customer,
-      stripe_plan_id: stripe_subscription.plan.id,
-      stripe_price_id: price.id,
-
-      user:,
-      product:,
-
-      interval: stripe_subscription.plan.interval,
-      status: stripe_subscription.status,
-      price_unit_amount: price.unit_amount,
-      current_period_start: Time.at(stripe_subscription.current_period_start).to_datetime,
-      current_period_end: Time.at(stripe_subscription.current_period_end).to_datetime,
-      cancel_at: stripe_subscription.cancel_at,
-      canceled_at: stripe_subscription.canceled_at
-    )
+    user = User.find_by(stripe_id: checkout_session.customer)
 
     SubscriptionMailer.with(user:).subscription_created.deliver_now
   end
