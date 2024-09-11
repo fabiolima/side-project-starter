@@ -47,9 +47,9 @@
   <p class="border rounded-xl bg-slate-100 p-4 md:p-6 mb-4">
     This page is <b>read-only.</b> You should manage your products in Stripe and then sync them here.
   </p>
-  <%= turbo_frame_tag "products" do %>
-    <ul class="space-y-4">
+  <ul class="space-y-4">
+    <%= turbo_frame_tag "products" do %>
       <%= render @products %>
-    </ul>
-  <% end %>
+    <% end %>
+  </ul>
 <% end %>

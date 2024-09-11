@@ -11,10 +11,11 @@ class Admin::Dashboard::ProductsController < ApplicationController
 
   def sync
     Product::StripeImporter.new.import
+    @products = Product.all
 
     respond_to do |format|
       format.turbo_stream do
-        render turbo_stream: turbo_stream.replace(:products, partial: "products", locals: { products: Product.all })
+        render turbo_stream: turbo_stream.replace(:products, partial: @products)
       end
 
       format.html do
