@@ -13,7 +13,7 @@ class Checkout::SessionCreator < ApplicationService
     Stripe::Checkout::Session.create(
       customer: @user.stripe_id,
       client_reference_id: @user.id,
-      success_url: "#{root_url + purchase_checkout_success_path}?session_id={CHECKOUT_SESSION_ID}",
+      success_url: "#{purchase_checkout_success_url}?session_id={CHECKOUT_SESSION_ID}",
       cancel_url: pricing_url,
       payment_method_types: ["card"],
       mode: "subscription",
