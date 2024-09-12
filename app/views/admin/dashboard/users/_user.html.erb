@@ -1,0 +1,25 @@
+<li class="py-3 flex items-center border-b" >
+  <p class="w-[200px] hidden sm:block">
+    <%= user.profile.full_name %>
+  </p>
+  <p class="w-[200px] truncate">
+    <span><%= user.email %> </span>
+    <% if user.access_locked? %>
+      <em class="ms-2 text-sm text-yellow-700 text-italic">(banned)</em>
+    <% end %>
+  </p>
+  <p class="w-[200px] truncate  hidden sm:block">
+    <button
+        data-controller="clipboard"
+        data-clipboard-text-value="<%= user.stripe_id %>"
+        data-action="clipboard#copy"
+        class="p-1 text-sm bg-slate-100 text-gray-800 inline-block rounded"
+      >
+      <%= icon "clipboard", classes: "inline size-4 mr-1" %>
+      <%= user.stripe_id %>
+    </button>
+  </p>
+  <div class="flex flex-1 justify-end">
+    <%= link_to "show", admin_dashboard_user_path(user.id), class: "btn-primary-sm-outline inline-flex items-center" %>
+  </div>
+</li>

@@ -9,9 +9,9 @@ class Admin::Dashboard::UsersController < ApplicationController
 
   def index
     email = "%#{search_params[:search]}%"
-    users = User.where("email LIKE ?", email)
+    users = User.where("email LIKE ?", email).includes(:profile)
 
-    @pagy, @users = pagy(users, limit: 2)
+    @pagy, @users = pagy(users, limit: 10)
   end
 
   def show
