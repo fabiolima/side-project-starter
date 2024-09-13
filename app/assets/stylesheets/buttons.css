@@ -2,11 +2,11 @@
   /* Private classes for internal use. */
 
   ._btn {
-    @apply py-[0.38rem] px-3 font-bold text-base rounded inline-block
+    @apply py-[0.38rem] px-3 font-bold text-base rounded inline-block disabled:cursor-not-allowed
   }
 
   ._btn-sm {
-    @apply py-1 px-2 font-semibold text-sm rounded inline-block
+    @apply py-1 px-2 font-semibold text-sm rounded inline-block disabled:cursor-not-allowed
   }
 
   ._primary {
@@ -18,11 +18,23 @@
   }
 
   ._secondary {
-    @apply bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:bg-gray-100 disabled:cursor-not-allowed hover:transition-all
+    @apply border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:bg-gray-100 disabled:cursor-not-allowed hover:transition-all
   }
 
   ._secondary_outline {
     @apply bg-white border border-gray-600 text-gray-800 outline-none disabled:bg-slate-50 disabled:text-gray-500 hover:text-white hover:bg-gray-600 hover:transition-all
+  }
+
+  ._danger {
+    @apply border border-transparent bg-red-600 text-white hover:bg-red-800 disabled:bg-red-100 disabled:cursor-not-allowed hover:transition-all
+  }
+
+  ._warning {
+    @apply bg-yellow-600 text-white hover:bg-yellow-800 disabled:bg-yellow-100 disabled:cursor-not-allowed hover:transition-all
+  }
+
+  ._warning_outline {
+    @apply bg-white border border-yellow-600 text-yellow-600 outline-none disabled:bg-yellow-100 disabled:text-yellow-600 hover:text-white hover:bg-yellow-500 hover:transition-all
   }
 
   /* Public classes to use in HTML */
@@ -53,5 +65,17 @@
 
   .btn-secondary-sm-outline {
     @apply _btn-sm _secondary_outline
+  }
+
+  .btn-danger {
+    @apply _btn _danger
+  }
+
+  .btn-warning {
+    @apply _btn _warning
+  }
+
+  .btn-warning-outline {
+    @apply _btn _warning_outline
   }
 }
