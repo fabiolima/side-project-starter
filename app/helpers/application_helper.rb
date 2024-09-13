@@ -45,6 +45,12 @@ module ApplicationHelper
     end
   end
 
+  def stripe_subscriptions_url(subscription = nil)
+    url = "https://dashboard.stripe.com/#{Rails.env.development? ? 'test/subscriptions' : '/subscriptions'}"
+
+    "#{url}/#{subscription.stripe_subscription_id}"
+  end
+
   def admin_dashboard_links
     [
       { label: "Dashboard", path: admin_dashboard_path, icon: "home" },

@@ -15,7 +15,10 @@ class Admin::Dashboard::UsersController < ApplicationController
   end
 
   def show
-    @user = User.includes(subscriptions: [price: [:product]]).find(params[:id])
+    @user = User.includes(:profile).find(params[:id])
+
+    subscriptions = Subscription.where(user: @user).includes(price: [:product]).order(created_at: :desc)
+    @pagy, @subscriptions = pagy(subscriptions, limit: 1)
   end
 
   def destroy

@@ -50,4 +50,8 @@
   .btn-secondary-outline {
     @apply _btn _secondary_outline
   }
+
+  .btn-secondary-sm-outline {
+    @apply _btn-sm _secondary_outline
+  }
 }

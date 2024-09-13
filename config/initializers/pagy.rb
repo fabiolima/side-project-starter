@@ -16,6 +16,8 @@
 # Pagy::DEFAULT[:count_args]  = []                    # example for non AR ORMs
 # Pagy::DEFAULT[:max_pages]   = 3000                  # example
 
+Pagy::DEFAULT[:link_extra] = 'data-turbo-frame="_self"'
+
 # Extras
 # See https://ddnexus.github.io/pagy/categories/extra
 

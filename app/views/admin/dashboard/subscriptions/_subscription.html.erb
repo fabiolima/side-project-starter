@@ -1,0 +1,71 @@
+<%
+  status = subscription.status.to_sym
+  colors = {
+    active: { bg: "bg-green-100", bg_accent: "bg-green-800", fc: "text-gray-800", accent_fc: "text-white" },
+    past_due: { bg: "bg-orange-200", bg_accent: "bg-orange-800", fc: "text-gray-800", accent_fc: "text-white" },
+    trialing: { bg: "bg-blue-200", bg_accent: "bg-blue-800", fc: "text-gray-800", accent_fc: "text-white" },
+    canceled: { bg: "bg-gray-200", bg_accent: "bg-gray-800", fc: "text-gray-800", accent_fc: "text-white" },
+  }
+%>
+<li id="<%= dom_id(subscription) %>" class="<%= colors[status][:bg] %> p-4 border rounded-xl">
+  <div class="mb-2 md:mb-6 flex flex-col md:flex-row md:items-center md:space-x-2 space-y-2 md:space-y-0">
+    <p>
+      <span class="<%= colors[status][:bg_accent]%> p-1 text-sm font-semibold text-white inline-block rounded mr-2">
+        <%= number_to_currency_br(subscription.price.unit_amount / 100)%>/<%= subscription.price.interval %>
+      </span>
+    </p>
+    <h3 class="text-lg flex-1 font-semibold">
+      <%= subscription.price.product.name %>
+    </h3>
+    <p>
+      <a href="<%= stripe_subscriptions_url(subscription)%>" target="_blank" class="btn-secondary-sm-outline"> Manage subscription</a>
+    </p>
+  </div>
+  <div class="flex flex-col md:flex-row space-y-3 md:space-y-0">
+    <div class="md:flex-1 flex flex-col space-y-3">
+      <div>
+        <p class="font-semibold ">Stripe subscription ID</p>
+        <button
+            data-controller="clipboard"
+            data-clipboard-text-value="<%= subscription.price.product.stripe_product_id %>"
+            data-action="clipboard#copy"
+            class="btn-secondary-sm-outline"
+          >
+          <%= icon "clipboard", classes: "inline size-4 mr-1" %>
+          <%= subscription.price.product.stripe_product_id %>
+        </button>
+      </div>
+      <div>
+        <p class="font-semibold ">Started date</p>
+        <p><%= subscription.start_date.to_formatted_s(:long) %></p>
+      </div>
+      <div>
+        <p class="font-semibold ">Ended at</p>
+        <p><%= !!subscription.ended_at ? subscription.ended_at.to_formatted_s(:long) : "still active" %></p>
+      </div>
+    </div>
+    <div class="md:flex-1 flex flex-col space-y-3">
+      <div>
+        <p class="font-semibold ">Status</p>
+        <span class="<%= colors[status][:bg_accent]%> p-1 text-sm font-semibold text-white inline-block rounded mr-2">
+          <%= subscription.status %>
+        </span>
+      </div>
+      <div>
+        <p class="font-semibold ">Current period</p>
+        <% if subscription.status == "canceled" %>
+          ---
+        <% else %>
+          <p>
+            <%= subscription.current_period_start.to_formatted_s(:short) %> until
+            <%= subscription.current_period_end.to_formatted_s(:short) %>
+          </p>
+        <% end %>
+      </div>
+      <div>
+        <p class="font-semibold ">Canceled at</p>
+        <p><%= !!subscription.canceled_at ? subscription.canceled_at.to_formatted_s(:long) : "still active" %></p>
+      </div>
+    </div>
+  </div>
+</li>
