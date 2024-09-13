@@ -7,18 +7,20 @@
     Back to dashboard
   <% end %>
 <% end %>
-<div>
+<div class="p-4 md:p-8 bg-white rounded-3xl">
   <%= form_tag(admin_dashboard_users_path, method: :get, class: "flex mb-8") do %>
     <%= text_field_tag(:search, params[:search], class: "w-full shadow-sm rounded px-3 border border-gray-black bg-slate-50 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500", placeholder: "Search by email" ) %>
     <%= submit_tag("Search", :id => "button", :class => "ms-4 btn-primary") %>
   <% end %>
   <ul>
-    <li class="py-3 flex items-center border-b">
-      <p class="w-[200px] font-semibold  hidden sm:block">Name</p>
-      <p class="w-[200px] font-semibold">E-mail</p>
-      <p class="w-[200px] font-semibold  hidden sm:block">Stripe Id</p>
-    </li>
-    <%= render @users %>
+    <% if !@users.empty? %>
+      <li class="py-3 flex items-center border-b">
+        <p class="w-[200px] font-semibold  hidden sm:block">Name</p>
+        <p class="w-[200px] font-semibold">E-mail</p>
+        <p class="w-[200px] font-semibold  hidden sm:block">Stripe Id</p>
+      </li>
+      <%= render @users %>
+    <% end %>
   </ul>
   <section class="mt-8 flex justify-between items-center">
     <%== pagy_nav(@pagy) if @pagy.pages > 1 %>

@@ -9,6 +9,8 @@ class CreateSubscriptions < ActiveRecord::Migration[7.2]
       t.references :price, null: false, foreign_key: true
 
       t.string :status
+      t.datetime :start_date
+      t.datetime :ended_at
       t.datetime :current_period_end
       t.datetime :current_period_start
       t.datetime :cancel_at

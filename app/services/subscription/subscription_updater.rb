@@ -6,17 +6,25 @@ class Subscription::SubscriptionUpdater < ApplicationService
     super()
   end
 
-  def update # rubocop:disable Metrics/AbcSize
+  def update # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     subscription = Subscription.find_by(stripe_subscription_id: @stripe_subscription.id)
 
     return if subscription.nil?
 
     subscription.update(
-      current_period_start: Time.at(@stripe_subscription.current_period_start).to_datetime,
-      current_period_end: Time.at(@stripe_subscription.current_period_end).to_datetime,
-      cancel_at: @stripe_subscription.cancel_at ? Time.at(@stripe_subscription.cancel_at).to_datetime : nil,
-      canceled_at: @stripe_subscription.canceled_at ? Time.at(@stripe_subscription.canceled_at).to_datetime : nil,
-      status: @stripe_subscription.status
+      status: @stripe_subscription.status,
+      current_period_start: to_datetime(@stripe_subscription.current_period_start),
+      current_period_end: to_datetime(@stripe_subscription.current_period_end),
+      start_date: to_datetime(@stripe_subscription.start_date),
+      ended_at: to_datetime(@stripe_subscription.ended_at),
+      cancel_at: to_datetime(@stripe_subscription.cancel_at),
+      canceled_at: to_datetime(@stripe_subscription.canceled_at)
     )
+  end
+
+  private
+
+  def to_datetime(date)
+    Time.at(date).to_datetime if date.present?
   end
 end

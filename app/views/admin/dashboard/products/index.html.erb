@@ -21,35 +21,37 @@
     </div>
   </div>
 <% end %>
-<% if @products.empty? %>
-  <div class="flex space-y-4 flex-col justify-center border rounded-xl bg-slate-100 p-6">
-    <h2 class="text-gray-800 font-semibold text-lg text-center">
-      Looks like you don't have products yet.
-    </h2>
-    <p class="text-center">If you already created your products at Stripe, then</p>
-    <%= button_to admin_dashboard_products_sync_path, {
-      form_class: "text-center",
-      method: :post,
-      data: { turbo: true },
-      params: { format: :html },
-      class: "btn-primary"
-    } do %>
-      Import products
-    <% end %>
-    <p class="text-center">
-      But if you don't
+<div class="p-4 md:p-8 bg-white rounded-3xl">
+  <% if @products.empty? %>
+    <div class="flex space-y-4 flex-col justify-center border rounded-xl bg-slate-100 p-6">
+      <h2 class="text-gray-800 font-semibold text-lg text-center">
+        Looks like you don't have products yet.
+      </h2>
+      <p class="text-center">If you already created your products at Stripe, then</p>
+      <%= button_to admin_dashboard_products_sync_path, {
+        form_class: "text-center",
+        method: :post,
+        data: { turbo: true },
+        params: { format: :html },
+        class: "btn-primary"
+      } do %>
+        Import products
+      <% end %>
+      <p class="text-center">
+        But if you don't
+      </p>
+      <p class="text-center">
+        <a target="_blank"  href="<%= stripe_products_url %>" class="btn-secondary-outline">Create your first product</a>
+      </p>
+    </div>
+  <% else %>
+    <p class="border rounded-xl bg-slate-100 p-4 md:p-6 mb-4">
+      This page is <b>read-only.</b> You should manage your products in Stripe and then sync them here.
     </p>
-    <p class="text-center">
-      <a target="_blank"  href="<%= stripe_products_url %>" class="btn-secondary-outline">Create your first product</a>
-    </p>
-  </div>
-<% else %>
-  <p class="border rounded-xl bg-slate-100 p-4 md:p-6 mb-4">
-    This page is <b>read-only.</b> You should manage your products in Stripe and then sync them here.
-  </p>
-  <ul class="space-y-4">
-    <%= turbo_frame_tag "products" do %>
-      <%= render @products %>
-    <% end %>
-  </ul>
-<% end %>
+    <ul class="space-y-4">
+      <%= turbo_frame_tag "products" do %>
+        <%= render @products %>
+      <% end %>
+    </ul>
+  <% end %>
+</div>

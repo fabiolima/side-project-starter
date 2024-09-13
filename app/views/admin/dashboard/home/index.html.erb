@@ -1,35 +1,37 @@
 <%= content_for :nav_title do %> Dashboard <%end%>
-<div class="grid grid-cols-2 gap-x-10">
-  <div>
-    <h4 class="text-2xl font-bold mb-4">Stats</h4>
-    <div class="grid grid-cols-2 gap-4 mb-8">
-      <div class="col-span-2">
-        <div class="p-4 bg-green-100 rounded-xl">
-          <div class="font-bold text-xl text-gray-800 leading-none">Total Users</div>
-          <div class="mt-5">
-            <%= link_to "#{@total_users} users", admin_dashboard_users_path, class: "inline-flex items-center justify-center py-2 px-3 rounded-xl bg-white text-gray-800 hover:text-blue-500 text-sm font-semibold transition" %>
+<div class="p-4 md:p-8 bg-white rounded-3xl">
+  <div class="grid grid-cols-2 gap-x-10">
+    <div>
+      <h4 class="text-2xl font-bold mb-4">Stats</h4>
+      <div class="grid grid-cols-2 gap-4 mb-8">
+        <div class="col-span-2">
+          <div class="p-4 bg-green-100 rounded-xl">
+            <div class="font-bold text-xl text-gray-800 leading-none">Total Users</div>
+            <div class="mt-5">
+              <%= link_to "#{@total_users} users", admin_dashboard_users_path, class: "inline-flex items-center justify-center py-2 px-3 rounded-xl bg-white text-gray-800 hover:text-blue-500 text-sm font-semibold transition" %>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <h4 class="text-2xl font-bold mb-4">Top pages <em class="text-sm font-semibold text-gray-600">(last 30 days)</em> </h4>
-    <div class="p-4 bg-white border rounded-xl text-gray-800 space-y-2">
-      <div class="flex justify-between">
-        <p class="text-gray-600 font-semibold text-sm">
-          Page url
-        </p>
-        <p class="text-gray-600 font-semibold text-sm">
-          visitors
-        </p>
+      <h4 class="text-2xl font-bold mb-4">Top pages <em class="text-sm font-semibold text-gray-600">(last 30 days)</em> </h4>
+      <div class="p-4 bg-white border rounded-xl text-gray-800 space-y-2">
+        <div class="flex justify-between">
+          <p class="text-gray-600 font-semibold text-sm">
+            Page url
+          </p>
+          <p class="text-gray-600 font-semibold text-sm">
+            visitors
+          </p>
+        </div>
+        <ul>
+          <% @visits.each do |url, count| %>
+            <li class="flex">
+              <p class="flex-1 text-sm truncate"> <%= path_from_url(url) %> </p>
+              <p class="text-sm ms-4"> <%= count %> </p>
+            </li>
+          <% end %>
+        </ul>
       </div>
-      <ul>
-        <% @visits.each do |url, count| %>
-          <li class="flex">
-            <p class="flex-1 text-sm truncate"> <%= path_from_url(url) %> </p>
-            <p class="text-sm ms-4"> <%= count %> </p>
-          </li>
-        <% end %>
-      </ul>
     </div>
   </div>
 </div>

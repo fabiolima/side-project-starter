@@ -15,7 +15,7 @@ class Admin::Dashboard::UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
+    @user = User.includes(subscriptions: [price: [:product]]).find(params[:id])
   end
 
   def destroy

@@ -109,6 +109,8 @@ ActiveRecord::Schema[7.2].define(version: 20_240_902_195_257) do
     t.bigint "user_id", null: false
     t.bigint "price_id", null: false
     t.string "status"
+    t.datetime "start_date"
+    t.datetime "ended_at"
     t.datetime "current_period_end"
     t.datetime "current_period_start"
     t.datetime "cancel_at"

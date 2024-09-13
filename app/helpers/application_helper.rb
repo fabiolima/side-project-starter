@@ -35,6 +35,16 @@ module ApplicationHelper
     end
   end
 
+  def stripe_customers_url(user = nil)
+    url = "https://dashboard.stripe.com/#{Rails.env.development? ? 'test/customers' : '/customers'}"
+
+    if user.nil?
+      url
+    else
+      "#{url}/#{user.stripe_id}"
+    end
+  end
+
   def admin_dashboard_links
     [
       { label: "Dashboard", path: admin_dashboard_path, icon: "home" },

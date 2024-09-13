@@ -7,43 +7,80 @@
     Back to all users
   <% end %>
 <% end %>
-<div class="mb-3">
-  <p class="font-semibold ">id</p>
-  <p><%= @user.id %></p>
+<div class="p-4 md:p-8 bg-white rounded-3xl mb-6">
+  <h4 class="text-2xl font-bold mb-4">Profile</h4>
+  <div class="flex flex-col md:flex-row">
+    <div class="space-y-3 flex-1 mb-3 md:mb-0 ">
+      <div>
+        <p class="font-semibold ">id</p>
+        <p><%= @user.id %></p>
+      </div>
+      <div>
+        <p class="font-semibold ">Email</p>
+        <p><%= @user.email %></p>
+      </div>
+      <div>
+        <p class="font-semibold ">Created at</p>
+        <p><%= @user.created_at.to_formatted_s(:long) %></p>
+      </div>
+      <div>
+        <p class="font-semibold ">Updated at</p>
+        <p><%= @user.updated_at.to_formatted_s(:long) %></p>
+      </div>
+    </div>
+    <div class="space-y-3 flex-1">
+      <div class=>
+        <p class="font-semibold ">Stripe ID</p>
+        <button
+            data-controller="clipboard"
+            data-clipboard-text-value="<%= @user.stripe_id %>"
+            data-action="clipboard#copy"
+            class="p-1 text-sm bg-slate-100 text-gray-800 inline-block rounded"
+          >
+          <%= icon "clipboard", classes: "inline size-4 mr-1" %>
+          <%= @user.stripe_id %>
+        </button>
+      </div>
+      <div class=>
+        <p class="font-semibold ">Customer URL</p>
+        <a class="text-blue-500 hover:underline" href="<%= stripe_customers_url(@user) %>" target="_blank">
+          Here
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
-<div class="mb-3">
-  <p class="font-semibold ">Email</p>
-  <p><%= @user.email %></p>
+<div class="p-4 md:p-8 bg-white rounded-3xl mb-6">
+  <h4 class="text-2xl font-bold mb-4">Subscriptions</h4>
+  <ul class="space-y-4">
+    <% @user.subscriptions.each do |subscription| %>
+      <%= render partial: "subscription", locals: { subscription: subscription }  %>
+    <% end %>
+  </ul>
 </div>
-<div class="mb-3">
-  <p class="font-semibold ">Created at</p>
-  <p><%= @user.created_at %></p>
-</div>
-<div>
-  <p class="font-semibold ">Updated at</p>
-  <p><%= @user.updated_at %></p>
-</div>
-<hr class="mt-8"/>
-<div class="mt-8 flex">
-  <% if @user.access_locked? %>
-    <%= button_to "Unban",
-      unban_admin_dashboard_user_path(@user),
-      method: :post,
-      form: { data: { turbo_confirm: "Are you sure?" }},
-      class: "bg-white border border-yellow-500 text-yellow-500 font-semibold py-2 px-3 hover:bg-yellow-500 hover:text-white"
+<div class="p-4 md:p-8 bg-white rounded-3xl">
+  <h4 class="text-2xl font-bold mb-4">Settings</h4>
+  <div class="mt-8 flex">
+    <% if @user.access_locked? %>
+      <%= button_to "Unban",
+        unban_admin_dashboard_user_path(@user),
+        method: :post,
+        form: { data: { turbo_confirm: "Are you sure?" }},
+        class: "bg-white border border-yellow-500 text-yellow-500 font-semibold py-2 px-3 hover:bg-yellow-500 hover:text-white"
+      %>
+    <% else %>
+      <%= button_to "Ban",
+        ban_admin_dashboard_user_path(@user),
+        method: :post,
+        form: { data: { turbo_confirm: "Are you sure?" }},
+        class: "bg-white border border-yellow-500 text-yellow-500 font-semibold py-2 px-3 hover:bg-yellow-500 hover:text-white"
+      %>
+    <% end %>
+    <%= button_to "Delete",
+      admin_dashboard_user_path(@user),
+      method: :delete,
+      form: { data: { turbo_confirm: "Are you sure?" } },
+      class: "ms-2 py-2 px-3 bg-red-400 hover:bg-red-500 text-gray-100 hover:text-white"
     %>
-  <% else %>
-    <%= button_to "Ban",
-      ban_admin_dashboard_user_path(@user),
-      method: :post,
-      form: { data: { turbo_confirm: "Are you sure?" }},
-      class: "bg-white border border-yellow-500 text-yellow-500 font-semibold py-2 px-3 hover:bg-yellow-500 hover:text-white"
-    %>
-  <% end %>
-  <%= button_to "Delete",
-    admin_dashboard_user_path(@user),
-    method: :delete,
-    form: { data: { turbo_confirm: "Are you sure?" } },
-    class: "ms-2 py-2 px-3 bg-red-400 hover:bg-red-500 text-gray-100 hover:text-white"
-  %>
+  </div>
 </div>
