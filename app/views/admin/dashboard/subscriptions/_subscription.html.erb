@@ -48,7 +48,7 @@
       <div>
         <p class="font-semibold ">Status</p>
         <span class="<%= colors[status][:bg_accent]%> p-1 text-sm font-semibold text-white inline-block rounded mr-2">
-          <%= subscription.status %>
+          <%= Subscription.human_enum_name(:status, subscription.status) %>
         </span>
       </div>
       <div>

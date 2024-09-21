@@ -29,3 +29,15 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    attributes:
+      subscription:
+        statuses:
+          active: "Active"
+          incomplete: "Incomplete"
+          incomplete_expired: "Expired"
+          trialing: "Trialing"
+          past_due: "Past due"
+          canceled: "Canceled"
+          unpaid: "Unpaid"
+          paused: "Paused"

@@ -12,7 +12,7 @@ class Subscription::SubscriptionUpdater < ApplicationService
     return if subscription.nil?
 
     subscription.update(
-      status: @stripe_subscription.status,
+      status: @stripe_subscription.status.to_sym,
       current_period_start: to_datetime(@stripe_subscription.current_period_start),
       current_period_end: to_datetime(@stripe_subscription.current_period_end),
       start_date: to_datetime(@stripe_subscription.start_date),

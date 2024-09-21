@@ -23,7 +23,7 @@ class Subscription::SubscriptionCreator < ApplicationService
       user:,
       price:,
       stripe_subscription_id: stripe_subscription.id,
-      status: stripe_subscription.status,
+      status: stripe_subscription.status.to_sym,
       current_period_start: to_datetime(stripe_subscription.current_period_start),
       current_period_end: to_datetime(stripe_subscription.current_period_end),
       start_date: to_datetime(stripe_subscription.start_date),

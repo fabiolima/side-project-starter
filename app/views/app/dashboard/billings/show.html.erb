@@ -1,40 +1,103 @@
 <%= content_for :nav_title do %> Billings <%end%>
-<% if @subscription
-
-  status = @subscription.status.to_sym
-  backgrounds = {
-    active: "bg-green-200",
-    past_due: "bg-orange-200",
-    trialing: "bg-blue-200"
-  }
-end %>
+<% content_for :pre_content do %>
+  <%= link_to app_dashboard_path, class: "w-auto inline-block mb-4 text-gray-800 p-1 px-2 text-sm" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 inline-block me-1">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+    </svg>
+    Back to dashboard
+  <% end %>
+<% end %>
 <% if @subscription %>
-  <div>
-    <h2 class="text-2xl font-bold mb-4">My plan</h2>
-    <div class="flex flex-col md:flex-row p-4 bg-white border rounded-xl text-gray-800">
-      <div class="md:flex-1">
-        <div class="flex justify-between">
-          <div class="text-xs font-semibold px-2 py-1 rounded mb-1 <%= backgrounds[status] %>">
-            <%= @subscription.status %>
+  <%
+    status = @subscription.status.to_sym
+    colors = {
+      active: { bg: "bg-green-100", bg_accent: "bg-green-800", fc: "text-gray-800", accent_fc: "text-white" },
+      past_due: { bg: "bg-orange-200", bg_accent: "bg-orange-800", fc: "text-gray-800", accent_fc: "text-white" },
+      trialing: { bg: "bg-blue-200", bg_accent: "bg-blue-800", fc: "text-gray-800", accent_fc: "text-white" },
+      canceled: { bg: "bg-gray-200", bg_accent: "bg-gray-800", fc: "text-gray-800", accent_fc: "text-white" },
+    }
+  %>
+  <div class="p-4 md:p-8 bg-white rounded-3xl mb-6">
+    <% if @subscription.canceled_at %>
+      <div class="bg-yellow-100 border-yellow-500 text-yellow-900 p-4 shadow-sm rounded-xl mb-6" role="alert">
+        <div class="flex">
+          <div class="py-1 mr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-bold">Your subscription will be ended soon.</p>
+            <p class="text-sm">
+              You can continue using with no extra charges until <b><%= @subscription.current_period_end.to_formatted_s(:long) %></b>
+            </p>
+            <div class="flex flex-col md:flex-row text-sm">
+              <p class="mb-0 grow-1">In case you change your mind, feel free to</p>
+              <%= button_to app_dashboard_billings_path, {
+                form_class: "mt-0 inline",
+                method: :post,
+                data: { turbo: false },
+                class: "underline inline md:ms-1"
+              } do %>
+                resubscribe.
+              <% end %>
+            </div>
           </div>
         </div>
-        <span class="font-bold">
-          <%= @subscription.price.product.name %>
-        </span>
-        <div class="text-sm text-gray-600">
-          <%= number_to_currency_br(@subscription.price.unit_amount.to_i / 100) %>/<%= @subscription.price.interval %>
-        </div>
       </div>
-      <div>
-        <%= button_to app_dashboard_billings_path, {
-            form_class: "",
+    <% end %>
+    <ul class="space-y-4">
+      <li id="<%= dom_id(@subscription) %>" class="<%= colors[status][:bg] %> p-4 border rounded-xl shadow-sm">
+        <div class="mb-2 md:mb-6 flex flex-col md:flex-row md:items-center md:space-x-2 space-y-2 md:space-y-0">
+          <p>
+            <span class="<%= colors[status][:bg_accent]%> p-1 text-sm font-semibold text-white inline-block rounded mr-2">
+              <%= number_to_currency_br(@subscription.price.unit_amount / 100)%>/<%= @subscription.price.interval %>
+            </span>
+          </p>
+          <h3 class="text-lg flex-1 font-semibold">
+            <%= @subscription.price.product.name %>
+          </h3>
+          <%= button_to app_dashboard_billings_path, {
+            form_class: "mt-0",
             method: :post,
             data: { turbo: false },
-            class: "rounded-xl bg-gray-100 font-bold text-sm py-2 px-3 text-gray-600 hover:text-black"
+            class: "btn-secondary-sm-outline"
           } do %>
-          Manage subscription
-        <% end %>
-      </div>
-    </div>
+            Manage subscription
+          <% end %>
+        </div>
+        <div class="flex flex-col md:flex-row space-y-3 md:space-y-0">
+          <div class="md:flex-1 flex flex-col space-y-3">
+            <div>
+              <p class="font-semibold ">Status</p>
+              <span class="<%= colors[status][:bg_accent]%> p-1 text-sm font-semibold text-white inline-block rounded mr-2">
+                <%= Subscription.human_enum_name(:status, @subscription.status) %>
+              </span>
+            </div>
+            <div>
+              <p class="font-semibold ">Started date</p>
+              <p><%= @subscription.start_date.to_formatted_s(:long) %></p>
+            </div>
+          </div>
+          <div class="md:flex-1 flex flex-col space-y-3">
+            <div>
+              <p class="font-semibold ">Current period</p>
+              <% if @subscription.status == "canceled" %>
+                ---
+              <% else %>
+                <p>
+                  <%= @subscription.current_period_start.to_formatted_s(:short) %> until
+                  <%= @subscription.current_period_end.to_formatted_s(:short) %>
+                </p>
+              <% end %>
+            </div>
+            <div>
+              <p class="font-semibold ">Canceled at</p>
+              <p><%= !!@subscription.canceled_at ? @subscription.canceled_at.to_formatted_s(:long) : "still active" %></p>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
   </div>
 <% end %>
