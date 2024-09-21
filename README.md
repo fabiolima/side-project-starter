@@ -1,10 +1,11 @@
-# README
+# README (Work in progress)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+- Create/update products OK
+- Create/update/cancel subscriptions OK
+- User management OK
+- Admin management OK
 
-Things you may want to cover:
-
+# Spec
 * Ruby version
 ruby 3.2.2 (2023-03-30 revision e51014f9c0) [x86_64-darwin17]
 Rails 7.2.1
