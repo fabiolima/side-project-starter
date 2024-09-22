@@ -2,8 +2,11 @@
 
 # Handles the home page of user's dashboard.
 class App::Dashboard::BillingsController < ApplicationController
+  include Pagy::Backend
+
   before_action :authenticate_user!
   layout "user_administrator"
+
   def index; end
 
   # POST /app/dashboard/billings
@@ -18,8 +21,7 @@ class App::Dashboard::BillingsController < ApplicationController
   end
 
   def show
-    return unless current_user.current_subscription?
-
-    @subscription = current_user.current_subscription
+    subscriptions = Subscription.where(user: current_user).includes(price: [:product]).order(created_at: :desc)
+    @pagy, @subscriptions = pagy(subscriptions, limit: 1)
   end
 end
