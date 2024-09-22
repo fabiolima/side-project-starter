@@ -18,10 +18,10 @@ class User < ApplicationRecord
   end
 
   def current_subscription?
-    Subscription.where(user: id, status: %w[active past_due trialing]).count.positive?
+    Subscription.where(user: id, status: %w[active past_due trialing unpaid paused]).count.positive?
   end
 
   def current_subscription
-    Subscription.where(user: id, status: %w[active past_due trialing]).first
+    Subscription.where(user: id, status: %w[active past_due trialing unpaid paused]).first
   end
 end
